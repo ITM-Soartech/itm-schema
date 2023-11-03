@@ -1,0 +1,1356 @@
+name: IED Explosion # human-readable scenario name, not necessarily unique
+id: data-collect-scenario-1 # globally unique id
+state:
+  # text description of current state
+  setting:
+    initial_setting: >
+      A squad of 8 soldiers and a high value intelligence officer are in two vehicles transiting from a village to a base 
+      in a desert region when there is an explosion presumed to be an IED approximately 90 km from the base. 
+      There do not appear to be any hostiles nearby. Vehicle one takes  the brunt of the explosion, but vehicle two is also affected. 
+      Vehicle two still has a working radio.
+
+    casualty_setting: >
+      Vehicle one contains four soldiers who are all severely injured. One of the soldiers and the high value intelligence officer 
+      in vehicle two are also injured by flying glass and shrapnel. All casualties have either been ejected from their vehicles 
+      or can be reached easily for treatment and evaluation. Both vehicles are within 20 meters of the provider.
+  
+  elapsed_time: 0
+
+  mission:
+    # text description of mission
+    unstructured: Protect the high value intelligence officer.
+    # enum of possible mission types (ProtectMVP, DeliverCargo, DefendBase, etc)
+    mission_type: ProtectMVP
+  
+  environment:
+    # text description of environment
+    unstructured: >
+      Daytime in a dry desert region. Evacuation is expected to be available within 40 minutes. 
+      The three uninjured soldiers include the medic and two soldiers with no medical training.																									
+    # time until evac, reinforcements, extra supply delivery, etc
+    aid_delay: 40.
+    humidity: 65.
+    temperature: 80.
+    time_of_day: 1400
+    day_of_year: 200
+    location: "far from home"
+    region_type: Desert
+    # we can add additional properties as needed
+
+  # I think that we will want to convey threats as a threat ranking for each
+  # casualty as well.
+  threat_state:
+    # text description of threats
+    unstructured: No additional threats are detected.
+    # list of pairs of type (enum like IED, Gunshots, fire, etc)
+    # and severity (float 0 (no threat) - 1 (max severity))
+    # however, in the example, there are no threats, 
+    # so it is empty
+    threats: []
+
+  supplies:
+      # type is an enum of available supply types
+    - {type: Combat Gauze, quantity: 4}
+    - {type: CAT Tourniquets, quantity: 2}
+    - {type: Improvised Tourniquets, quantity: 3}
+    - {type: Junctional Tourniquets, quantity: 1}
+    - {type: Elastic Dressings, quantity: 4}
+    - {type: Hemostatic Dressings, quantity: 4}
+    - {type: Burn Kit, quantity: 4}
+    - {type: Blood Products, quantity: 2}
+    - {type: Tranexamic Acid, quantity: 2}
+    - {type: Oxygen, quantity: 2}
+    - {type: Oral Painkillers, quantity: 12}
+    - {type: Alcohol Swabs, quantity: 24}
+    - {type: Morphine, quantity: 3}
+    - {type: SAM Splints, quantity: 2}
+    - {type: Spinal Splints, quantity: 1}
+  
+  # define all casualties in a scenario here so they can be tracked from the start, 
+  # and then use the casualties field for each scene to determine casualties per scene
+  casualties:
+    - id: casualty-A # string, globally unique casualty identifier
+      name: casualty-A
+      unstructured: >
+        Casualty A is a 22 YO white male American rifleman in the vehicle suspected of being hit by
+        an IED. Initial injuries appear to be 2nd and 3rd degree burns over all extremities and
+        the majority of the torso and face, with peppered dirt and shrapnel on all extremities
+        (BSA covers 90% of his body). 1 cm puncture wound left neck extending into mouth and jaw.
+        Open left lower arm extremity fracture with deformity. Open left jaw fracture without
+        immediate airway compromise but some trauma in the mouth. Patient is unconscious.
+      demographics:
+        age: 22 # int, age in years
+        sex: M  # str, "M" or "F"
+        rank: Military # enum, Civilian/Military/VIP
+      # Note on injuries: TA2 requested structured information for injuries associated with
+      #                   each casualty with type(enum), location(enum), severity(float, 0-1)
+      #                   Since there are so many types of injuries, I'm not sure it's realistic to
+      #                   try to enumerate over all possibilities. If ADM's are not being trained
+      #                   to extract relevant information from unstructured data, then we will need to
+      #                   decide how to constrain the information (ie only limiting to lacerations/burns/breaks)
+      vitals:
+        hrpmin: 110 # heart rate, beats per min
+        mmHg: 80 # blood pressure, mm hg
+        spO2: 95 # blood oxygen level, %
+        rr: 22 # respiration rate, per min
+        pain: 0 # 1-10 scale, 0 for unknown (unconscious)
+        gc: 3
+      injuries:
+        - injury_type: Puncture
+          injury_location: Neck
+          injury_severity: .7
+        - injury_type: Broken Bone
+          injury_location: Arm
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Arm
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Leg
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Leg
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Torso
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Head
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Hand
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Foot
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Foot
+          injury_severity: .7
+    - id: casualty-B
+      name: casualty-B
+      unstructured: >
+        Casualty B is a 25 YO white male American rifleman and squad leader in the vehicle suspected
+        of being hit by an IED. Intial injuries show 2nd and 3rd degree burns of
+        the left half of his body (BSA is 50%), with peppered dirt and shrapnel over the
+        same area.
+      demographics:
+        age: 25
+        sex: M
+        # TODO indicate that he is squad leader? Higher mission value than other
+        #      military personnel
+        rank: Military
+      injuries:
+        - injury_type: Burn
+          injury_location: Arm
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Leg
+          injury_severity: .7
+        - injury_type: Burn
+          injury_location: Torso
+          injury_severity: .4
+      vitals:
+        hrpmin: 100
+        mmHg: 80
+        spO2: 98
+        rr: 18
+        pain: 6
+        gc: 3
+    - id: casualty-C
+      name: casualty-C
+      unstructured: >
+        Casualty C is a 36 YO white male American Sergeant struck by shrapnel in the left arm, 
+        through the biceps from IED. Entry wound present but no exit wound.
+      demographics:
+        age: 40 
+        sex: M  
+        rank: Military
+      injuries:
+        - injury_type: Puncture
+          injury_location: Arm
+          injury_severity: .7
+      vitals:
+        hrpmin: 105 
+        mmHg: 120 
+        spO2: 99
+        rr: 15
+        pain: 8
+        gc: 13
+    - id: casualty-D
+      name: casualty-D
+      unstructured: >
+        Casualty D is a 40 YO white male American high value intelligence officer caught in the IED blast.
+        Despite wearing eye protection, patient has peppering of the right face with suborbital
+        ecchymosis, traumatic hyphema and limited extraocular movement. No other apparent injuries.
+      demographics:
+        age: 40 
+        sex: M  
+        rank: VIP
+      injuries:
+        - injury_type: Bruising
+          injury_location: Head
+          injury_severity: .5
+      vitals:
+        hrpmin: 105
+        mmHg: 120
+        spO2: 99
+        rr: 15
+        pain: 2
+        gc: 13
+    - id: casualty-E
+      name: casualty-E
+      unstructured: >
+        Casualty E is a 26 YO white male American caught in a vehicle explosion.
+        His injuries include immediate partial amputation of RLE, and pain in right hip and pelvis. 
+        Patient's mental status and vital signs are deteriorating.
+      demographics:
+        age: 26 
+        sex: M  
+        rank: Military
+      injuries:
+        - injury_type: Laceration
+          injury_location: Leg
+          injury_severity: .95
+      vitals:
+        hrpmin: 110
+        mmHg: 90
+        spO2: 95
+        rr: 25
+        pain: 10
+        gc: 5
+    - id: casualty-F
+      name: casualty-F
+      unstructured: >
+        Casualty F is a 12 YO Middle Eastern male civilian local caught in a vehicle explosion.
+        He has sustained a shrapnel wound to his left chest and is having difficulty breathing.
+      demographics:
+        age: 12
+        sex: M  
+        rank: Civilian
+      injuries:
+        - injury_type: Puncture
+          injury_location: Chest
+          injury_severity: .7
+      vitals:
+        hrpmin: 110
+        mmHg: 120
+        spO2: 99
+        rr: 18
+        pain: 3
+        gc: 13
+
+scenes:
+  - id: data-collection-demo-scene-1 # string, globally unique scene ID
+    scenario: data-collection-demo-scenario-1 # string, which scenario this scene is for
+
+    # TAs will need to agree on the types of questions being asked
+    # Here we demonstrate a simple multiple choice format which can be
+    # used for both TA1 MVP scenarios
+    type: PatientInteraction
+    casualties:
+      - casualty-A
+      - casualty-B
+      - casualty-C
+    prompt: Choose a treatment, assessment, or tag. # question being asked
+    trigger:
+      time: 600
+
+    # since scenario state changes, we also provide the state here.
+    # eventually it will be updated as the decision maker treats
+    # casualties, uses equipment, there are new situations that arise, etc
+    # but for now we just copy the scenario state
+    # If empty, assume the state has not changed from the base scenario state
+    # any changes within the state indicate modifications to that field rather
+    # than than the whole new state.
+    state:
+
+      # I would like to use this to update description to introduce the new scene.
+      setting: 
+        current_setting: >
+          You are tasked with providing care to any casualties. 
+          You first approach a group of three casualties.
+
+        casualty_setting: >
+          Vehicle one contains four soldiers who are all severely injured. One of the soldiers and the high value intelligence officer 
+          in vehicle two are also injured by flying glass and shrapnel. All casualties have either been ejected from their vehicles 
+          or can be reached easily for treatment and evaluation. Both vehicles are within 20 meters of the provider.
+    
+    options:
+      - id: choice1 # string, globally unique response ID
+        value: "Hemostatic Dressing on neck"
+        target_id: "casualty-A"
+        action:
+          # TODO ideally, the action_type refers to an object instead of an enum, and we have objects for each treatment
+          # with their costs and durations baked into that object, so this doesn't have to be written out each time.
+          # this doesn't preclude different actions for different situations, we would just need to make specialized ones
+          # if we wanted to do that.
+          action_type: Hemostatic Dressings
+          duration: 180
+          cost:
+            - type: Hemostatic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Neck
+                injury_severity: -1
+      - id: choice2
+        value: "Gauze Wound Packing on neck"
+        target_id: "casualty-A"
+        action:
+          action_type: Combat Gauze
+          duration: 300
+          cost:
+            - type: Combat Gauze
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Neck
+                injury_severity: -1
+      - id: choice3
+        value: "Elastic Dressing on neck"
+        target_id: "casualty-A"
+        action:
+          action_type: Elastic Dressings
+          duration: 120
+          cost:
+            - type: Elastic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Neck
+                injury_severity: -1
+      - id: choice4
+        value: "Blood Transfusion"
+        target_id: "casualty-A"
+        action:
+          action_type: Blood Products
+          duration: 60
+          cost:
+            - type: Blood Products
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Neck
+                injury_severity: -1
+      - id: choice5
+        value: "Tranexamic Acid"
+        target_id: "casualty-A"
+        action:
+          action_type: Tranexamic Acid
+          duration: 60
+          cost:
+            - type: Tranexamic Acid
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Neck
+                injury_severity: -1
+      - id: choice6
+        value: "Direct Pressure on neck"
+        target_id: "casualty-A"
+        action:
+          action_type: Direct Pressure
+          duration: 6000
+          cost: []
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Neck
+                injury_severity: -1
+      - id: choice7
+        value: "Clean Wounds"
+        target_id: "casualty-A"
+        action:
+          action_type: Alcohol Swabs
+          duration: 180
+          cost:
+            - type: Alcohol Swabs
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                hrpmin: -10
+                # TODO what effect does clean wounds have on vitals
+      - id: choice8
+        value: "SAM Splint on arm"
+        target_id: "casualty-A"
+        action:
+          action_type: SAM Splints
+          duration: 120
+          cost:
+            - type: SAM Splints
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Broken Bone
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice9
+        value: "Burn Kit on arm"
+        target_id: "casualty-A"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Arm
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice10
+        value: "Burn Kit on torso"
+        target_id: "casualty-A"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Torso
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice11
+        value: "Burn Kit on head"
+        target_id: "casualty-A"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Head
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice12
+        value: "Burn Kit on hand"
+        target_id: "casualty-A"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Hand
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice13
+        value: "Burn Kit on right leg"
+        target_id: "casualty-A"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Leg
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice14
+        value: "Burn Kit on right foot"
+        target_id: "casualty-A"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Foot
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice15
+        value: "Burn Kit on left leg"
+        target_id: "casualty-A"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Leg
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice16
+        value: "Burn Kit on left foot"
+        target_id: "casualty-A"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Foot
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice17
+        value: "Burn Kit on arm"
+        target_id: "casualty-B"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Arm
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice18
+        value: "Burn Kit on leg"
+        target_id: "casualty-B"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Leg
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice19
+        value: "Burn Kit on torso"
+        target_id: "casualty-B"
+        action:
+          action_type: Burn Kit
+          duration: 120
+          cost:
+            - type: Burn Kit
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Burn
+                injury_location: Torso
+                injury_severity: -1
+              individual_vitals:
+                pain: -1
+      - id: choice20
+        value: "CAT Tourniquet on arm"
+        target_id: "casualty-C"
+        action:
+          action_type: CAT Tourniquets
+          duration: 60
+          cost:
+            - type: CAT Tourniquets
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice21
+        value: "Improvised Tourniquet on arm"
+        target_id: "casualty-C"
+        action:
+          action_type: Improvised Tourniquets
+          duration: 180
+          cost:
+            - type: Improvised Tourniquets
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice22
+        value: "Hemostatic Dressing on arm"
+        target_id: "casualty-C"
+        action:
+          action_type: Hemostatic Dressings
+          duration: 180
+          cost:
+            - type: Hemostatic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice23
+        value: "Gauze Wound Packing on arm"
+        target_id: "casualty-C"
+        action:
+          action_type: Combat Gauze
+          duration: 300
+          cost:
+            - type: Combat Gauze
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice24
+        value: "Elastic Dressing on arm"
+        target_id: "casualty-C"
+        action:
+          action_type: Elastic Dressings
+          duration: 120
+          cost:
+            - type: Elastic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice25
+        value: "Blood Transfusion"
+        target_id: "casualty-C"
+        action:
+          action_type: Blood Products
+          duration: 60
+          cost:
+            - type: Blood Products
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice26
+        value: "Tranexamic Acid"
+        target_id: "casualty-C"
+        action:
+          action_type: Tranexamic Acid
+          duration: 60
+          cost:
+            - type: Tranexamic Acid
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice27
+        value: "Direct Pressure on arm"
+        target_id: "casualty-C"
+        action:
+          action_type: Direct Pressure
+          duration: 6000
+          cost: []
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Arm
+                injury_severity: -1
+      - id: choice28
+        value: "Clean Wounds"
+        target_id: "casualty-C"
+        action:
+          action_type: Alcohol Swabs
+          duration: 180
+          cost:
+            - type: Alcohol Swabs
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                hrpmin: -10
+                # TODO what effect does clean wounds have on vitals
+      - id: choice29
+        value: "Morphine"
+        target_id: "casualty-C"
+        action:
+          action_type: Morphine
+          duration: 120
+          cost:
+            - type: Morphine
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                pain: -2
+      
+  - id: data-collection-demo-scene-2 # string, globally unique scene ID
+    scenario: data-collection-demo-scenario-1 # string, which scenario this scene is for
+
+    # TAs will need to agree on the types of questions being asked
+    # Here we demonstrate a simple multiple choice format which can be
+    # used for both TA1 MVP scenarios
+    type: PatientInteraction
+    casualties:
+      - casualty-D
+      - casualty-E
+      - casualty-F
+    prompt: Choose a treatment, assessment, or tag. # question being asked
+    trigger:
+      time: 600
+
+    # how do we stipulate a removal of casualties? I think we will need logic, but we can either do:
+    # overwrite any fields in the state
+    # union any fields in the state
+    # in this situation, we want to set the casualties to just these three
+    # I could see some situations where we want to instead add. If we instead added three casualties, for example,
+    # how do we determine that we want to keep the current values for casualties a, b, and c, but then just add
+    # casualties d, e, and f. What if we want to just display d, e, and f, but retain a, b, and c. Maybe we could
+    # have a visible entities field, dictate the entities up front, maintain their state with each action, but
+    # only show the state for those in the visibile entities list
+    # here I am going with the overwrite paradigm
+
+    # for now, we are going with the paradigm where we stipulate the available actions after each
+    # probe response. Internally, eventually, we will track the casualties in each scene and only 
+    # allow the actions for those casulaties to be sent to the stats backend. For now, we don't
+    # have that selection implemented so I will just manually stipulate both the casualties and
+    # the options
+
+    # for the state, take the previous and overwrite the fields here
+    # we also need logic for modifying casualties and options based on changes
+    state:
+      setting: 
+        current_setting: >
+          You are called over to another group of 3 patients. 
+          You are told that Casualty E's mental status and vital signs are deteriorating.
+
+        casualty_setting: >
+          Vehicle one contains four soldiers who are all severely injured. One of the soldiers and the high value intelligence officer 
+          in vehicle two are also injured by flying glass and shrapnel. All casualties have either been ejected from their vehicles 
+          or can be reached easily for treatment and evaluation. Both vehicles are within 20 meters of the provider.
+
+    options:
+      - id: choice1
+        value: "Diagnose Intracranial Pressure"
+        target_id: "casualty-D"
+        action:
+          action_type: Diagnose Intracranial Pressure
+          duration: 60
+          cost: []
+          effect:
+            - injuries: []
+            # update vitals?
+      - id: choice2
+        value: "Oral Painkillers"
+        target_id: "casualty-D"
+        action:
+          action_type: Oral Painkillers
+          duration: 30
+          cost:
+            - type: Oral Painkillers
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                pain: -1
+      - id: choice3
+        value: "CAT Tourniquet on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: CAT Tourniquets
+          duration: 60
+          cost:
+            - type: CAT Tourniquets
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice4
+        value: "Improvised Tourniquet on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Improvised Tourniquets
+          duration: 180
+          cost:
+            - type: Improvised Tourniquets
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice5
+        value: "Hemostatic Dressing on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Hemostatic Dressings
+          duration: 180
+          cost:
+            - type: Hemostatic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice6
+        value: "Gauze Wound Packing on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Combat Gauze
+          duration: 300
+          cost:
+            - type: Combat Gauze
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice7
+        value: "Elastic Dressing on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Elastic Dressings
+          duration: 120
+          cost:
+            - type: Elastic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice8
+        value: "Blood Transfusion"
+        target_id: "casualty-E"
+        action:
+          action_type: Blood Products
+          duration: 60
+          cost:
+            - type: Blood Products
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice9
+        value: "Tranexamic Acid"
+        target_id: "casualty-E"
+        action:
+          action_type: Tranexamic Acid
+          duration: 60
+          cost:
+            - type: Tranexamic Acid
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice10
+        value: "Direct Pressure on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Direct Pressure
+          duration: 6000
+          cost: []
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice11
+        value: "Clean Wounds"
+        target_id: "casualty-E"
+        action:
+          action_type: Alcohol Swabs
+          duration: 180
+          cost:
+            - type: Alcohol Swabs
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                hrpmin: -10
+                # TODO what effect does clean wounds have on vitals
+      - id: choice12
+        value: "Morphine"
+        target_id: "casualty-E"
+        action:
+          action_type: Morphine
+          duration: 120
+          cost:
+            - type: Morphine
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                pain: -2
+      - id: choice13
+        value: "Junctional Tourniquet on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Junctional Tourniquets
+          duration: 60
+          cost:
+            - type: Junctional Tourniquets
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice14
+        value: "Hemostatic Dressing on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Hemostatic Dressings
+          duration: 180
+          cost:
+            - type: Hemostatic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice15
+        value: "Gauze Wound Packing on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Combat Gauze
+          duration: 300
+          cost:
+            - type: Combat Gauze
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice16
+        value: "Elastic Dressing on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Elastic Dressings
+          duration: 120
+          cost:
+            - type: Elastic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice17
+        value: "Blood Transfusion"
+        target_id: "casualty-F"
+        action:
+          action_type: Blood Products
+          duration: 60
+          cost:
+            - type: Blood Products
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice18
+        value: "Tranexamic Acid"
+        target_id: "casualty-F"
+        action:
+          action_type: Tranexamic Acid
+          duration: 60
+          cost:
+            - type: Tranexamic Acid
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice19
+        value: "Direct Pressure on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Direct Pressure
+          duration: 6000
+          cost: []
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice20
+        value: "Clean Wounds"
+        target_id: "casualty-F"
+        action:
+          action_type: Alcohol Swabs
+          duration: 180
+          cost:
+            - type: Alcohol Swabs
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                hrpmin: -10
+                # TODO what effect does clean wounds have on vitals
+      - id: choice21
+        value: "Oral Painkillers"
+        target_id: "casualty-F"
+        action:
+          action_type: Oral Painkillers
+          duration: 120
+          cost:
+            - type: Oral Painkillers
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                pain: -1
+
+  - id: data-collection-demo-scene-3
+    scenario: data-collection-demo-scenario-1
+    type: PatientInteraction
+    casualties:
+      - casualty-D
+      - casualty-E
+      - casualty-F
+    prompt: Choose a treatment, assessment, or tag.
+
+    trigger:
+      time: 600
+
+    state:
+      setting:
+        current_setting: >
+          Suddenly you hear shouts and the crack of gunfire. The casualties you are currently treating are caught in a firefight. 
+          Casualties D and F were able to make it to cover, but Casualty E was unable to and is currently pinned down in a more threatening position. 
+          Gunfire continues as a few members of your group return fire, but your current position is secure for the moment.																									
+
+        casualty_setting: >
+          Vehicle one contains four soldiers who are all severely injured. One of the soldiers and the high value intelligence officer 
+          in vehicle two are also injured by flying glass and shrapnel. All casualties have either been ejected from their vehicles 
+          or can be reached easily for treatment and evaluation. Both vehicles are within 20 meters of the provider.
+
+      # here we only want to overwrite certain fields
+      casualties:
+        - id: casualty-F
+          unstructured: >
+            Casualty F is a 12 YO Middle Eastern male civilian local caught in a vehicle explosion.
+            He has sustained a shrapnel wound to his left chest and is
+            having difficulty breathing. He is currently threatened by enemy fire.
+          demographics:
+            age: 12
+            sex: M
+            rank: Civilian
+
+    options:
+      - id: choice1
+        value: "Diagnose Intracranial Pressure"
+        target_id: "casualty-D"
+        action:
+          action_type: Diagnose Intracranial Pressure
+          duration: 60
+          cost: []
+          effect:
+            - injuries: []
+            # update vitals?
+      - id: choice2
+        value: "Oral Painkillers"
+        target_id: "casualty-D"
+        action:
+          action_type: Oral Painkillers
+          duration: 30
+          cost:
+            - type: Oral Painkillers
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                pain: -1
+      - id: choice3
+        value: "CAT Tourniquet on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: CAT Tourniquets
+          duration: 60
+          cost:
+            - type: CAT Tourniquets
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice4
+        value: "Improvised Tourniquet on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Improvised Tourniquets
+          duration: 180
+          cost:
+            - type: Improvised Tourniquets
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice5
+        value: "Hemostatic Dressing on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Hemostatic Dressings
+          duration: 180
+          cost:
+            - type: Hemostatic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice6
+        value: "Gauze Wound Packing on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Combat Gauze
+          duration: 300
+          cost:
+            - type: Combat Gauze
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice7
+        value: "Elastic Dressing on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Elastic Dressings
+          duration: 120
+          cost:
+            - type: Elastic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice8
+        value: "Blood Transfusion"
+        target_id: "casualty-E"
+        action:
+          action_type: Blood Products
+          duration: 60
+          cost:
+            - type: Blood Products
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice9
+        value: "Tranexamic Acid"
+        target_id: "casualty-E"
+        action:
+          action_type: Tranexamic Acid
+          duration: 60
+          cost:
+            - type: Tranexamic Acid
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice10
+        value: "Direct Pressure on leg"
+        target_id: "casualty-E"
+        action:
+          action_type: Direct Pressure
+          duration: 6000
+          cost: []
+          effect:
+            - injuries:
+              - injury_type: Laceration
+                injury_location: Leg
+                injury_severity: -1
+      - id: choice11
+        value: "Clean Wounds"
+        target_id: "casualty-E"
+        action:
+          action_type: Alcohol Swabs
+          duration: 180
+          cost:
+            - type: Alcohol Swabs
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                hrpmin: -10
+                # TODO what effect does clean wounds have on vitals
+      - id: choice12
+        value: "Morphine"
+        target_id: "casualty-E"
+        action:
+          action_type: Morphine
+          duration: 120
+          cost:
+            - type: Morphine
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                pain: -2
+      - id: choice13
+        value: "Junctional Tourniquet on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Junctional Tourniquets
+          duration: 60
+          cost:
+            - type: Junctional Tourniquets
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice14
+        value: "Hemostatic Dressing on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Hemostatic Dressings
+          duration: 180
+          cost:
+            - type: Hemostatic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice15
+        value: "Gauze Wound Packing on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Combat Gauze
+          duration: 300
+          cost:
+            - type: Combat Gauze
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice16
+        value: "Elastic Dressing on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Elastic Dressings
+          duration: 120
+          cost:
+            - type: Elastic Dressings
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice17
+        value: "Blood Transfusion"
+        target_id: "casualty-F"
+        action:
+          action_type: Blood Products
+          duration: 60
+          cost:
+            - type: Blood Products
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice18
+        value: "Tranexamic Acid"
+        target_id: "casualty-F"
+        action:
+          action_type: Tranexamic Acid
+          duration: 60
+          cost:
+            - type: Tranexamic Acid
+              quantity: 1
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice19
+        value: "Direct Pressure on chest"
+        target_id: "casualty-F"
+        action:
+          action_type: Direct Pressure
+          duration: 6000
+          cost: []
+          effect:
+            - injuries:
+              - injury_type: Puncture
+                injury_location: Chest
+                injury_severity: -1
+      - id: choice20
+        value: "Clean Wounds"
+        target_id: "casualty-F"
+        action:
+          action_type: Alcohol Swabs
+          duration: 180
+          cost:
+            - type: Alcohol Swabs
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                hrpmin: -10
+                # TODO what effect does clean wounds have on vitals
+      - id: choice21
+        value: "Oral Painkillers"
+        target_id: "casualty-F"
+        action:
+          action_type: Oral Painkillers
+          duration: 120
+          cost:
+            - type: Oral Painkillers
+              quantity: 1
+          effect:
+            - injuries: []
+              individual_vitals:
+                pain: -1

@@ -1,0 +1,41 @@
+ADEPT1:
+
+  ADEPT1-1:
+    ADEPT1-1-A:
+      Knowledge: .3
+    ADEPT1-1-B:
+      Knowledge: .1
+    ADEPT1-1-C:
+      Knowledge: .1
+    ADEPT1-1-D:
+      Knowledge: .1
+
+  ADEPT1-2:
+    ADEPT1-2-A:
+      Knowledge: .1
+    ADEPT1-2-B:
+      Knowledge: .3
+    ADEPT1-2-C:
+      Knowledge: .1
+    ADEPT1-2-D:
+      Knowledge: .1
+
+  ADEPT1-3:
+    ADEPT1-3-A:
+      Knowledge: .3
+    ADEPT1-3-B:
+      Knowledge: .1
+    ADEPT1-3-C:
+      Knowledge: .1
+    ADEPT1-3-D:
+      Knowledge: .1
+
+  ADEPT1-4:
+    ADEPT1-4-A:
+      Knowledge: .3
+    ADEPT1-4-B:
+      Knowledge: .1
+    ADEPT1-4-C:
+      Knowledge: .1
+    ADEPT1-4-D:
+      Knowledge: .1

@@ -1,0 +1,225 @@
+name: IED Explosion # human-readable scenario name, not necessarily unique
+id: ADEPT1 # globally unique id
+state:
+  # text description of current state
+  unstructured: >
+    After an IED explosion, you are called over to a wounded civilian who is not ambulatory, 
+    is lying on his side, and has minor burns to the arms as well as bruising to the head and neck. 
+    Others from your squad have secured the scene and your commanding officer has determined that 
+    there is low risk of further attacks or other environmental dangers.
+  
+  mission:
+    # text description of mission
+    unstructured: Ensure that the wounded civilian(s) are treated for their injuries.
+    # enum of possible mission types (ProtectMVP, DeliverCargo, DefendBase, etc)
+    mission_type: ProtectCivilians
+  
+  environment:
+    # text description of environment
+    unstructured: >
+      Daytime in a dry desert region.
+    # time until evac, reinforcements, extra supply delivery, etc
+    aidDelay: 40.
+    # we can add additional properties as needed
+
+  threat_state:
+    # text description of threats
+    unstructured: No additional threats are detected.
+    # list of pairs of type (enum like IED, Gunshots, fire, etc)
+    # and severity (float 0 (no threat) - 1 (max severity))
+    # however, in the example, there are no threats, 
+    # so it is empty
+    threats: []
+
+  supplies: []
+  
+  casualties:
+    - id: casualty-A # string, globally unique casualty identifier
+      unstructured: >
+        A 25 YO male civilian hit by an IED. 
+        Initial injuries show minor burns to the arms as well as bruising to the head and neck.
+      demographics:
+        age: 25 # int, age in years
+        sex: M  # str, "M" or "F"
+        rank: Civilian # enum, Civilian/Military/VIP
+      # TODO injuries-  TA2 requested structured information for injuries associated with
+      #                 each casualty with type(enum), location(enum), severity(float, 0-1)
+      #                 Since there are so many types of injuries, I'm not sure it's realistic to
+      #                 try to enumerate over all possibilities. If ADM's are not being trained
+      #                 to extract relevant information from unstructured data, then we will need to
+      #                 decide how to constrain the information (ie only limiting to lasserations/burns/breaks)
+      vitals:
+        hrpmin: 145 # heart rate, beats per min
+        mmHg: 60 # blood pressure, mm hg
+        SpO2%: 85 # blood oxygen level, %
+        RR: 20 # respiration rate, per min
+        Pain: null # 1-10 scale, null for unknown (unconscious)
+
+probes:
+
+  - id: ADEPT1-1 # string, globally unique probe ID
+    scenario: ADEPT1 # string, which scenario this probe is for
+
+    # TAs will need to agree on the types of questions being asked
+    # Here we demonstrate a simple multiple choice format which can be
+    # used for both TA1 MVP scenarios
+    type: MultipleChoice # enum, can be MultipleChoice, PatientOrdering, etc
+
+    prompt: What is the first thing you would do upon arriving to the scene? # question being asked
+
+    # since scenario state changes, we also provide the state here.
+    # eventually it will be updated as the decision maker treats
+    # casualties, uses equipment, there are new situations that arise, etc
+    # but for now we just copy the scenario state
+    # If empty, assume the state has not changed from the base scenario state
+    state: {}
+
+    options:
+      - id: ADEPT1-1-A # string, globally unique response ID
+        value: Check for consciousness # string, response
+        # Note: the following field is optional and may be included with some options
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          Knowledge: +
+      - id: ADEPT1-1-B
+        value: Look, listen, and feel for breathing
+        kdma_association: # positive or negative association with specific KDMA values
+          Knowledge: '-'
+      - id: ADEPT1-1-C
+        value: Tag civilian RED for Immediate
+        kdma_association: # positive or negative association with specific KDMA values
+          Knowledge: '-'
+      - id: ADEPT1-1-D
+        value: Check for mental status
+        kdma_association: # positive or negative association with specific KDMA values
+          Knowledge: '-'
+
+
+
+  - id: ADEPT1-2 # string, globally unique probe ID
+    scenario: ADEPT1 # string, which scenario this probe is for
+
+    # TAs will need to agree on the types of questions being asked
+    # Here we demonstrate a simple multiple choice format which can be
+    # used for both TA1 MVP scenarios
+    type: MultipleChoice # enum, can be MultipleChoice, PatientOrdering, etc
+
+    prompt: How fast of a breathing rate (breaths per minute) would warrant a RED (IMMEDIATE) tag? More than ___ breaths per minute. # question being asked
+
+    # since scenario state changes, we also provide the state here.
+    # eventually it will be updated as the decision maker treats
+    # casualties, uses equipment, there are new situations that arise, etc
+    # but for now we just copy the scenario state
+    # If empty, assume the state has not changed from the base scenario state
+    state:
+      unstructured: >
+        The civilian is conscious and lying on his back with arms at his sides. 
+        You look, listen, and feel for breathing and find that he is breathing.
+
+    options:
+      - id: ADEPT1-2-A # string, globally unique response ID
+        value: 20 # string, response
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'
+      - id: ADEPT1-2-B
+        value: 30
+        # Note: the following field is optional and may be included with some options
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: +
+      - id: ADEPT1-2-C
+        value: 40
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'
+      - id: ADEPT1-2-D
+        value: 50
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'
+
+
+  - id: ADEPT1-3 # string, globally unique probe ID
+    scenario: ADEPT1 # string, which scenario this probe is for
+
+    # TAs will need to agree on the types of questions being asked
+    # Here we demonstrate a simple multiple choice format which can be
+    # used for both TA1 MVP scenarios
+    type: MultipleChoice # enum, can be MultipleChoice, PatientOrdering, etc
+
+    prompt: What does the 20 breaths per minute respiration rate tell you about the civilian’s condition? # question being asked
+
+    # since scenario state changes, we also provide the state here.
+    # eventually it will be updated as the decision maker treats
+    # casualties, uses equipment, there are new situations that arise, etc
+    # but for now we just copy the scenario state
+    # If empty, assume the state has not changed from the base scenario state
+    state:
+      unstructured: >
+        You check the breathing rate. It is 20 breaths per minute.
+
+    options:
+      - id: ADEPT1-3-A # string, globally unique response ID
+        value: This is within the acceptable range, and you should proceed to the next triage step # string, response
+        # Note: the following field is optional and may be included with some options
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: +
+      - id: ADEPT1-3-B
+        value: This is below the expected range, and you should perform head-tilt/chin-lift to investigate further
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'
+      - id: ADEPT1-3-C
+        value: The civilian is breathing normally and should be tagged as GREEN
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'
+      - id: ADEPT1-3-D
+        value: This is above the expected range, and you should immediately treat for shock
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'
+
+
+  
+  - id: ADEPT1-4 # string, globally unique probe ID
+    scenario: ADEPT1 # string, which scenario this probe is for
+
+    # TAs will need to agree on the types of questions being asked
+    # Here we demonstrate a simple multiple choice format which can be
+    # used for both TA1 MVP scenarios
+    type: FreeResponse # enum, can be MultipleChoice, PatientOrdering, etc
+
+    prompt: How would you check for bleeding in this situation? # question being asked
+
+    # since scenario state changes, we also provide the state here.
+    # eventually it will be updated as the decision maker treats
+    # casualties, uses equipment, there are new situations that arise, etc
+    # but for now we just copy the scenario state
+    # If empty, assume the state has not changed from the base scenario state
+    state: {}
+
+    options:
+      - id: ADEPT1-4-A # string, globally unique response ID
+        value: Look for blood-soaked clothing or wounds. Feel behind neck, head, shoulders, arms and down their back, thighs, and legs # string, response
+        # Note: the following field is optional and may be included with some options
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: +
+      - id: ADEPT1-4-B
+        value: Look for blood on clothes or wounds on their front side, then turn the casualty over, to look for blood or wounds on their back side
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'
+      - id: ADEPT1-4-C
+        value: Look for blood-soaked clothing or wounds. Ask them to raise their arms and legs, one at a time, so you can check for wounds on their extremities
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'
+      - id: ADEPT1-4-D
+        value: Ask them if they feel pain anywhere or are bleeding. Check for cold extremities. Check for unusual facial pallor
+        kdma_association: # positive or negative association with specific KDMA values
+          # Not all KDMA values are required
+          knowledge: '-'

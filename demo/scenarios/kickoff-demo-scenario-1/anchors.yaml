@@ -1,0 +1,226 @@
+## arbitrary anchors associated with probe responses
+# I included some extra ones in test-scenario-1 and test-scenario-2 to allow for testing
+# submitting multiple responses and getting session-level alignment results.
+
+# map scenario id to map of probe response id to anchors
+# map probe response id to its anchors
+# anchors range from 0-1
+
+# for test: choice 1 should align reasonably well with kdma-alignment-target-1 values,
+# and choice 2 should not align well.
+kickoff-demo-scenario-1:
+  kickoff-demo-probe-1:
+    choice1:
+      'denial': 0.3
+      'mission': 0.7 
+    choice2:
+      'denial': 1.0
+      'mission': 0.0 
+    choice3:
+      'denial': 1.0
+      'mission': 0. 
+    choice4:
+      'denial': 1.0
+      'mission': 1.0 
+    choice5:
+      'denial': 0.5
+      'mission': 0.5
+
+  kickoff-demo-probe-2:
+    choice1:
+      'denial': 0.35
+      'mission': 0.75
+    choice2:
+      'denial': 0.9
+      'mission': 0.1
+    choice3:
+      'denial': 0.3
+      'mission': 0.5
+    choice4:
+      'denial': 0.1
+      'mission': 0.3
+    choice5:
+      'denial': 0.5
+      'mission': 0.5
+    choice6:
+      'denial': 0.3
+      'mission': 0.7
+    choice7:
+      'denial': 0.3
+      'mission': 0.7
+    choice8:
+      'denial': 0.7
+      'mission': 0.7
+    choice9:
+      'denial': 0.9
+      'mission': 0.8
+    choice10:
+      'denial': 0.2
+      'mission': 0.6
+
+  kickoff-demo-probe-3:
+    choice1:
+      'denial': 0.25
+      'mission': 0.65
+    choice2:
+      'denial': 0.997
+      'mission': 0.195
+    choice3:
+      'denial': 0.5
+      'mission': 0.8
+    choice4:
+      'denial': 0.3
+      'mission': 0.7
+    choice5:
+      'denial': 0.2
+      'mission': 0.5
+    choice6:
+      'denial': 0.8
+      'mission': 0.9
+    choice7:
+      'denial': 0.
+      'mission': 0.5
+    choice8:
+      'denial': 0.9
+      'mission': 0.7
+    choice9:
+      'denial': 0.5
+      'mission': 0.8
+    choice10:
+      'denial': 0.
+      'mission': 0.
+
+  kickoff-demo-probe-4:
+    choice1:
+      'denial': 0.338
+      'mission': 0.8
+    choice2:
+      'denial': 0.5
+      'mission': 0.5
+    choice3:
+      'denial': 0.8
+      'mission': 0.7
+    choice4:
+      'denial': 0.7
+      'mission': 0.7
+    choice5:
+      'denial': 0.
+      'mission': 0.7
+    choice6:
+      'denial': 0.1
+      'mission': 0.7
+    choice7:
+      'denial': 0.
+      'mission': 0.
+    choice8:
+      'denial': 0.2
+      'mission': 0.5
+    choice9:
+      'denial': 0.5
+      'mission': 0.7
+    choice10:
+      'denial': 0.
+      'mission': 0.
+
+  kickoff-demo-probe-5:
+    choice1:
+      'denial': 0.197
+      'mission': 0.59
+    choice2:
+      'denial': 0.52
+      'mission': 0.81
+    choice3:
+      'denial': 0.4
+      'mission': 0.7
+    choice4:
+      'denial': 0.1
+      'mission': 0.3
+    choice5:
+      'denial': 0.3
+      'mission': 0.5
+    choice6:
+      'denial': 0.4
+      'mission': 0.8
+    choice7:
+      'denial': 0.7
+      'mission': 0.7
+    choice8:
+      'denial': 0.9
+      'mission': 0.6
+    choice9:
+      'denial': 0.3
+      'mission': 0.9
+    choice10:
+      'denial': 0.1
+      'mission': 0.7
+
+  kickoff-demo-probe-6:
+    choice1:
+      'denial': 0.255
+      'mission': 0.753
+    choice2:
+      'denial': 0.2
+      'mission': 0.8
+    choice3:
+      'denial': 0.6
+      'mission': 0.6
+    choice4:
+      'denial': 0.9
+      'mission': 0.6
+    choice5:
+      'denial': 0.
+      'mission': 0.
+    choice6:
+      'denial': 0.
+      'mission': 0.
+    choice7:
+      'denial': 0.6
+      'mission': 0.4
+    choice8:
+      'denial': 0.3
+      'mission': 0.9
+    choice9:
+      'denial': 0.7
+      'mission': 0.9
+    choice10:
+      'denial': 0.3
+      'mission': 0.5
+
+test-scenario-1:
+  test-probe-1:
+    choice1:
+      'denial': 0.3
+      'mission': 0.7 
+    choice2:
+      'denial': 0.4
+      'mission': 0.2 
+  test-probe-2:
+    choice1:
+      'denial': 0.8
+      'mission': 0.9 
+    choice2:
+      'denial': 0.54
+      'mission': 0.7
+
+test-scenario-2:
+  test-probe-1:
+    choice1:
+      'denial': 0.1
+      'mission': 0.6 
+    choice2:
+      'denial': 0.2
+      'mission': 0.66 
+  test-probe-2:
+    choice1:
+      'denial': 0.78
+      'mission': 0.04 
+    choice2:
+      'denial': 0.36
+      'mission': 0.54
+  test-probe-3:
+    choice1:
+      'denial': 0.44
+      'mission': 0.23 
+    choice2:
+      'denial': 0.46
+      'mission': 0.84
