@@ -72,13 +72,24 @@ class AlignmentScore(ps.ValidatedBaseModel):
     kdma_alignments: Dict[KDMAId, float]
 
 
+# used by the alignment visualizer to show an analysis of the quality of the alignment
 class AlignmentPackage(ps.ValidatedBaseModel):
+
+    # used to determine the quality of the alignment
     alignment_score: alignment_score
+
+    # used to indicate what was aligning to the RD
     aligner_id: str
+
+    # used to indicate the KDMAs of whatever was aligning to the RD
     aligner_profile: KDMAProfile
     # we might need to distinguish between more than 1 kind of reference distribution
     # reference_distribution: ReferenceDistribution
-    alignment_target: List[KDMAProfile]
+    
+    # the target given to the aligner prior to it's attempt at aligning
+    # which version do we use?
+    #alignment_target: List[KDMAProfile]
+    alignment_target: AlignmentTarget
 
 
 class KDMAScore(ps.ValidatedBaseModel):
@@ -88,6 +99,11 @@ class KDMAScore(ps.ValidatedBaseModel):
     kdma: ps.KDMA
     kdma_id: KDMAId
     kdma_probes: List[ps.Probe]
+
+
+class AlignmentTarget(ps.ValidatedBaseModel):
+    kdma_values: Dict[KDMAId, float]
+
 
 #todo: for each qualtrics Enum, make sure to align with what is actually collected from qualtrics
 class GenderIdentity(str, Enum):
