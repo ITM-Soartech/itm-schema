@@ -72,6 +72,15 @@ class AlignmentScore(ps.ValidatedBaseModel):
     kdma_alignments: Dict[KDMAId, float]
 
 
+class AlignmentPackage(ps.ValidatedBaseModel):
+    alignment_score: alignment_score
+    aligner_id: str
+    aligner_profile: KDMAProfile
+    # we might need to distinguish between more than 1 kind of reference distribution
+    # reference_distribution: ReferenceDistribution
+    alignment_target: List[KDMAProfile]
+
+
 class KDMAScore(ps.ValidatedBaseModel):
     """
 
