@@ -69,6 +69,7 @@ class AlignmentScore(ps.ValidatedBaseModel):
 
     """
     score: float
+    kdma_alignments: Dict[KDMAId, float]
 
 
 class KDMAScore(ps.ValidatedBaseModel):
