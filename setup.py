@@ -14,6 +14,8 @@ if __name__ == "__main__":
         package_dir={'': 'src'},
         install_requires=[
             'pydantic',
+            'scikit-learn',
+            'requests', # for unit tests
         ]
     )
 
