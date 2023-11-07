@@ -2,10 +2,10 @@
 Contains pydantic models for internal backend logic. These objects are not included
 in the ITM public api schema shared with other TAs.
 """
-from pydantic import Field, model_validator
-import src.itm_schema.placeholders as ph
-from src.itm_schema import pydantic_schema as ps
 from typing import Optional
+from pydantic import Field, model_validator
+from . import placeholders as ph
+from . import pydantic_schema as ps
 
 
 class Trigger(ps.ValidatedBaseModel):

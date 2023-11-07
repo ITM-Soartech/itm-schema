@@ -4,7 +4,7 @@ data collect. These objects are not included in the ITM public api schema shared
 other TAs.
 """
 from pydantic import Field
-from itm_schema import pydantic_schema as ps
+from . import pydantic_schema as ps
 
 
 class StatsProbe(ps.Probe):

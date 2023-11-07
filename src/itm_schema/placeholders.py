@@ -1,7 +1,7 @@
 """
 Place for reserved values that should not be used elsewhere.
 """
-from itm_schema import pydantic_schema as ps
+from . import pydantic_schema as ps
 # space for blank placeholder objects needed because fastapi can't return null, 
 # even when the request body is empty (http 204 no content)
 
