@@ -15,6 +15,7 @@ if __name__ == "__main__":
         install_requires=[
             'pydantic',
             'scikit-learn',
+            'pyyaml',
             'requests', # for unit tests
         ]
     )
