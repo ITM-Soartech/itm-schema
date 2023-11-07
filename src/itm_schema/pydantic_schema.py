@@ -36,8 +36,10 @@ class StateSetting(BaseModel):
        description="Brief description of casualties that are currently being triaged.")
     
 
+# Depreciated: Use kdma_ids.KDMAId instead
 class KDMA_name(str, Enum):
     """
+    Depreciated: Use kdma_ids.KDMAId instead
     Possible KDMA names.
     """
     # TODO standardize casing- first letter upper case?

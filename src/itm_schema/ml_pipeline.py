@@ -1,30 +1,15 @@
 """
 Contains pydantic models for machine learning pipeline objects.
 """
-from pydantic import Field, model_validator
-import src.itm_schema.placeholders as ph
-from src.itm_schema import pydantic_schema as ps
 from typing import Optional, List, Dict
 from sklearn.neighbors import KernelDensity
-from src.itm_schema import pydantic_schema as ps
-from enum import Enum
+from .kdma_ids import KDMAId
+from . import pydantic_schema as ps
 
-# see: https://soartech.sharepoint.us/:x:/r/sites/DARPA-ITM/_layouts/15/Doc.aspx?sourcedoc=%7B44D255B3-C829-4144-85C0-35AF300C3D81%7D&file=ITM%20Survey%20Mapping%20Template.xlsx&action=default&mobileredirect=true
-class KDMAId(str, Enum):
-    """
+class SimpleHistogram(ps.ValidatedBaseModel):
+    bin_values: List[float]
+    bin_size: float
 
-    """
-    risk_tol = "RiskTolerance"
-    negative_urgency = "NegativeUrgency"
-    ambiguity_tol = "AmbiguityTolerance"
-    satisficing = "Satisficing"
-    deny_care = "DenyCare"
-    mission_success = "MissionSuccess"
-    deviate_policy = "DeviatePolicy"
-    deviate_standards = "DeviateStandards"
-    qol = "QualityOfLife"
-    trait_bias = "TraitBias"
-    frugality = "Frugality"
 
 
 class KDMAMeasurement(ps.ValidatedBaseModel):
@@ -33,17 +18,16 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     """
     # initial representation of KDMA from pydantic schema, may not include int "score" value
     # may be removed in the future
-    kdma: ps.KDMA
+    kdma: Optional[ps.KDMA]
 
     # an enum that represented which KDMA this measurement corresponds to
-    kdma_id: KDMAId
+    kdma_id: Optional[KDMAId]
 
     # probability distribution representation of KDMA
-    kde: KernelDensity
+    _kde: Optional[KernelDensity]
 
     # histogram representation of KDMA
-    bin_values: List[float]
-    bin_size: float
+    hist: Optional[SimpleHistogram]
 
 
 class KDMAProfile(ps.ValidatedBaseModel):
@@ -72,11 +56,15 @@ class AlignmentScore(ps.ValidatedBaseModel):
     kdma_alignments: Dict[KDMAId, float]
 
 
+class AlignmentTarget(ps.ValidatedBaseModel):
+    kdma_values: Dict[KDMAId, float]
+
+
 # used by the alignment visualizer to show an analysis of the quality of the alignment
 class AlignmentPackage(ps.ValidatedBaseModel):
 
     # used to determine the quality of the alignment
-    alignment_score: alignment_score
+    alignment_score: float
 
     # used to indicate what was aligning to the RD
     aligner_id: str
@@ -100,135 +88,4 @@ class KDMAScore(ps.ValidatedBaseModel):
     kdma_id: KDMAId
     kdma_probes: List[ps.Probe]
 
-
-class AlignmentTarget(ps.ValidatedBaseModel):
-    kdma_values: Dict[KDMAId, float]
-
-
-#todo: for each qualtrics Enum, make sure to align with what is actually collected from qualtrics
-class GenderIdentity(str, Enum):
-    """
-
-    """
-    male = "Male"
-    female = "Female"
-    other = "Other"
-
-
-class Education(str, Enum):
-    """
-
-    """
-    none = "None"
-    high_school = "High School"
-    college = "College"
-    grad_school = "Grad School"
-    medical_school = "Medical School"
-    hard_knocks = "School of Hard Knocks"
-
-
-class OccupationType(str, Enum):
-    """
-
-    """
-    nurse = "Nurse"
-    clinical_coordinator = "Clinical Coordinator"
-    doctor = "Doctor"
-    physician_assistant = "Physician's assistant"
-    surgeon = "Surgeon"
-    emt = "EMT"
-
-
-class Occupation(ps.ValidatedBaseModel):
-    """
-
-    """
-    type: OccupationType
-    length: int
-
-
-class Certification(str, Enum):
-    """
-
-    """
-    c1 = "Certification 1"
-    c2 = "Certification 2"
-    c3 = "Certification 3"
-
-
-class MilitaryPosition(str, Enum):
-    """
-
-    """
-    p1 = "Position 1"
-    p2 = "Position 2"
-    p3 = "Position 3"
-
-
-class MilitaryExperience(ps.ValidatedBaseModel):
-    """
-    
-    """
-    position: MilitaryPosition
-    length: int
-
-
-class Race(str, Enum):
-    """
-
-    """
-    black_african_american = "Black/AfricanAmerican"
-    white = "White"
-    hispanic_latino = "Hispanic/Latino"
-    asian = "Asian"
-    american_indian_alaska_native = "AmericanIndian/AlaskaNative"
-    middle_eastern_north_african = "MiddleEastern/NorthAfrican"
-    native_hawaiin_pacific_islander = "NativeHawaiin/PacificIslander"
-
-
-class DMDemographics(ps.ValidatedBaseModel):
-    """
-
-    """
-    # id of decision maker
-    dm_id: str
-    age: int
-    gender: GenderIdentity
-    race: Race
-    occupations: List[Occupation]
-    certifications: List[Certification]
-    military_experience: List[MilitaryExperience]
-
-
-class RawModelInput(ps.ValidatedBaseModel):
-    """
-
-    """
-    probe: ps.Probe
-    probe_response: ps.ProbeResponse
-    dm_demographics: DMDemographics
-
-
-class Feature(ps.ValidatedBaseModel):
-    """
-
-    """
-    value: float
-    label: str
-
-
-class RefinedModelInput(ps.ValidatedBaseModel):
-    """
-
-    """
-    features: List[Feature]
-
-
-class RawModelTarget(ps.ValidatedBaseModel):
-    """
-
-    """
-    # id of decision maker
-    dm_id: str
-    kdma_baseline_estimate: KDMAProfile
 
