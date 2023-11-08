@@ -7,8 +7,9 @@ from .kdma_ids import KDMAId
 from . import pydantic_schema as ps
 
 class SimpleHistogram(ps.ValidatedBaseModel):
+    # Should match output of np.histogram
     bin_values: List[float]
-    bin_size: float
+    bin_edges: List[float]
 
 
 
@@ -16,18 +17,21 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     """
 
     """
-    # initial representation of KDMA from pydantic schema, may not include int "score" value
-    # may be removed in the future
-    kdma: Optional[ps.KDMA]
-
     # an enum that represented which KDMA this measurement corresponds to
-    kdma_id: Optional[KDMAId]
+    kdma_id: KDMAId
+
+    # Plain value for this KDMA
+    value: float
 
     # probability distribution representation of KDMA
-    _kde: Optional[KernelDensity]
+    kde: Optional[KernelDensity]
 
     # histogram representation of KDMA
     hist: Optional[SimpleHistogram]
+
+    class Config:
+        # Allow non-pydantic KernelDensity
+        arbitrary_types_allowed = True
 
 
 class KDMAProfile(ps.ValidatedBaseModel):
@@ -78,14 +82,3 @@ class AlignmentPackage(ps.ValidatedBaseModel):
     # which version do we use?
     #alignment_target: List[KDMAProfile]
     alignment_target: AlignmentTarget
-
-
-class KDMAScore(ps.ValidatedBaseModel):
-    """
-
-    """
-    kdma: ps.KDMA
-    kdma_id: KDMAId
-    kdma_probes: List[ps.Probe]
-
-
