@@ -1,6 +1,6 @@
 from enum import Enum
 from .pydantic_schema import ValidatedBaseModel
-from typing import List
+from typing import List, Dict
 
 #todo: for each qualtrics Enum, make sure to align with what is actually collected from qualtrics
 class GenderIdentity(str, Enum):
@@ -96,3 +96,9 @@ class DMDemographics(ValidatedBaseModel):
     certifications: List[Certification]
     military_experience: List[MilitaryExperience]
 
+class DMPopulation(ValidatedBaseModel):
+    """
+    Container object for DM Demographics
+    String id is the Qualtrics user id
+    """
+    population: Dict[str, DMDemographics]
