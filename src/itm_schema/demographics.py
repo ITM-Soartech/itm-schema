@@ -28,12 +28,17 @@ class OccupationType(str, Enum):
     """
 
     """
+    none = "None"
     nurse = "Nurse"
     clinical_coordinator = "Clinical Coordinator"
+    clinical_staff = "Clinical Staff"
     doctor = "Doctor"
-    physician_assistant = "Physician's assistant"
+    physician = "Physician"
+    physician_assistant = "Physician's Assistant"
     surgeon = "Surgeon"
     emt = "EMT"
+    paramedic = "Paramedic"
+    firefighter = "Firefighter"
 
 
 class Occupation(ValidatedBaseModel):
