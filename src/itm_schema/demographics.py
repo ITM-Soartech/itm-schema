@@ -39,6 +39,8 @@ class OccupationType(str, Enum):
     emt = "EMT"
     paramedic = "Paramedic"
     firefighter = "Firefighter"
+    resident = "Resident"
+    engineer = "Engineer"
 
 
 class Occupation(ValidatedBaseModel):
