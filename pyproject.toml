@@ -1,0 +1,30 @@
+[project]
+name = "itm_schema"
+version = "0.0.1"
+authors = [{name="Soar Technology", email="placeholder@soartech.com"}]
+description = "ITM TA1 schema"
+readme = "README.md"
+requires-python = ">=3.11.3"
+classifiers = [
+    "Programming Language :: Python :: 3 ",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://hq-git.soartech.com/itm/itm-schema"
+Issues = "https://hq-git.soartech.com/itm/itm-schema/-/issues"
+
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = [ # PEP 508 specifications.
+    "setuptools",
+    "wheel",
+    "pydantic",
+    "scikit-learn",
+    "pyyaml",
+    "requests" # for unit tests
+]  
+
+[tool.setuptools.packages.find]
+where = ["src"]
