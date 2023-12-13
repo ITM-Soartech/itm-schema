@@ -34,16 +34,9 @@ class Scene(ps.ValidatedBaseModel):
     # we enforce that the number of supplies is ge 0.
     supplies: list[ps.Supply] = []
     # eventually I would like this to be generated, but for now they will be manually defined
-    options: list[ps.ProbeChoice]  # used to populate first probe
-    trigger: Trigger = Field(description="trigger for ending the scene")
+    probes: list[ps.Probe]
+    
     state: dict = Field(description="modifications to scenario state")
-    allow_tagging: bool = Field(default=True, description=
-    'Generate responses for tagging casualties.')
-    allow_general_assessment: bool = Field(default=True, description=
-    'Generate responses for performing general assessment on casualties '
-    'to reveal their vitals')
-    allow_skipping: bool = Field(default=True, description=
-    'Generate response for taking no action and moving to the next scene.')
 
     @model_validator(mode='after')
     def only_actions_for_included_casualties(self):
