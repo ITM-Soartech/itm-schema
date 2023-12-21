@@ -1,6 +1,6 @@
 from enum import Enum
 from .pydantic_schema import ValidatedBaseModel
-from typing import List
+from typing import List, Dict
 
 #todo: for each qualtrics Enum, make sure to align with what is actually collected from qualtrics
 class GenderIdentity(str, Enum):
@@ -28,12 +28,19 @@ class OccupationType(str, Enum):
     """
 
     """
+    none = "None"
     nurse = "Nurse"
     clinical_coordinator = "Clinical Coordinator"
+    clinical_staff = "Clinical Staff"
     doctor = "Doctor"
-    physician_assistant = "Physician's assistant"
+    physician = "Physician"
+    physician_assistant = "Physician's Assistant"
     surgeon = "Surgeon"
     emt = "EMT"
+    paramedic = "Paramedic"
+    firefighter = "Firefighter"
+    resident = "Resident"
+    engineer = "Engineer"
 
 
 class Occupation(ValidatedBaseModel):
@@ -96,3 +103,9 @@ class DMDemographics(ValidatedBaseModel):
     certifications: List[Certification]
     military_experience: List[MilitaryExperience]
 
+class DMPopulation(ValidatedBaseModel):
+    """
+    Container object for DM Demographics
+    String id is the Qualtrics user id
+    """
+    population: Dict[str, DMDemographics]

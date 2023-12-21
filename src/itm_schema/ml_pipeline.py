@@ -50,27 +50,38 @@ class ReferenceDistribution(ps.ValidatedBaseModel):
     """
     rdms: Dict[str, KDMAProfile]
 
-
-#todo: stub, expand
-class AlignmentScore(ps.ValidatedBaseModel):
+class AlignmentTarget(ps.ValidatedBaseModel):
     """
-
+    Dict's str is the dm_id 
     """
-    score: float
+    target: Dict[str, KDMAProfile]
+
+class KDMAAlignment(ps.ValidatedBaseModel):
+    """
+    This object describes per KMDA of alignment of an ADM to 1 RDM
+    """
+    # this dict contains list of KDMAs for 1 decision maker
     kdma_alignments: Dict[KDMAId, float]
 
-
-class AlignmentTarget(ps.ValidatedBaseModel):
-    kdma_values: Dict[KDMAId, float]
-
+class RDMAlignment(ps.ValidatedBaseModel):
+    """
+    # This object describes the alignment of an ADM to 1 RDM
+    """
+    rdm_id: str
+    # this is the overall alignment of the ADM to a single RDM
+    individual_alignment: float
+    alignment_detail: KDMAAlignment
 
 # used by the alignment visualizer to show an analysis of the quality of the alignment
 class AlignmentPackage(ps.ValidatedBaseModel):
 
-    # used to determine the quality of the alignment
-    alignment_score: float
+    # overall alignment of one ADM to the target alignment group
+    overall_alignment: float
 
-    # used to indicate what was aligning to the RD
+    # alignment of the ADM to each invididual RDM in the alignment target
+    rdm_alignments: List[RDMAlignment]
+
+    # used to indicate what was aligning to the RD (usually the ADM)
     aligner_id: str
 
     # used to indicate the KDMAs of whatever was aligning to the RD
@@ -78,7 +89,5 @@ class AlignmentPackage(ps.ValidatedBaseModel):
     # we might need to distinguish between more than 1 kind of reference distribution
     # reference_distribution: ReferenceDistribution
     
-    # the target given to the aligner prior to it's attempt at aligning
-    # which version do we use?
-    #alignment_target: List[KDMAProfile]
+    # target to which the ADM is aligned 
     alignment_target: AlignmentTarget
