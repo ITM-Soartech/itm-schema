@@ -42,11 +42,7 @@ class KDMA_name(str, Enum):
     Depreciated: Use kdma_ids.KDMAId instead
     Possible KDMA names.
     """
-    # TODO standardize casing- first letter upper case?
-    denial = "denial"
-    mission = "mission"
-    Knowledge = "Knowledge"
-
+    MAXIMIZATION = "maximization"
 
 class KDMA(ValidatedBaseModel):
     """
@@ -54,7 +50,7 @@ class KDMA(ValidatedBaseModel):
     """
     kdma: KDMA_name  # TODO rename to "name" or something
     # -1 means masked
-    value: float = Field(ge=0, le=10)
+    value: float = Field(ge=0.0, le=1.0)
 
 
 class MissionType(str, Enum):
