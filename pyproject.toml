@@ -1,0 +1,20 @@
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = ["setuptools", "wheel"]  # PEP 508 specifications.
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "itm_schema"
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: Proprietary :: Only for use by Soar Technology, LLC",
+    "Operating System :: OS Independent",
+]
+
+urls = {Homepage = "https://hq-git.soartech.com/itm/itm-schema"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

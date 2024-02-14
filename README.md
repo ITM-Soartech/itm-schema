@@ -6,11 +6,11 @@ Demo folder contains data to validate schema.
 
 ## Installing
 
-Note: It is recommended that you use a python3.10 virtual environment:
+Note: It is recommended that you use python >= 3.10.
 
 ```bash
-python3.10 -m venv env
-source env/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 To install the package and dependencies:
@@ -31,11 +31,5 @@ $ python -q
 <class 'itm_schema.ml_pipeline.KDMAMeasurement'>
 ```
 
-## Running Tests
-
-To run tests, install the package (see above) then run unittest discover
-
-```bash
-cd itm-schema
-python -m unittest discover
-```
+# Updating scenario schema
+We have adopted the TA3 schema for scenario objects (scenario, scene, action, supplies, etc.) TA3 provides an OpenAPI yaml specification for this schema, which can be used to generate pydantic classes for each object in the schema. To update the schema, download the newest version of the ta3 OpenAPI specification, move it to `ta3/current_schema.yaml`, and run `bash ta3/update_ta3_schema.sh`. This will generate new models and put them in `src/ta3_schema`.
