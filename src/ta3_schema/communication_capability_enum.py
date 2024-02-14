@@ -20,17 +20,16 @@ from typing_extensions import Self
 
 class CommunicationCapabilityEnum(str, Enum):
     """
-    current operational communication capability and limitations
+    current availability of internal and external communication
     """
 
     """
     allowed enum values
     """
-    ALL = 'all'
-    SATELLITE = 'satellite'
-    RADIO = 'radio'
-    VOICE = 'voice'
-    VISUAL = 'visual'
+    INTERNAL = 'internal'
+    EXTERNAL = 'external'
+    BOTH = 'both'
+    NEITHER = 'neither'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

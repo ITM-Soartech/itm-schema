@@ -30,6 +30,7 @@ class MilitaryDispositionEnum(str, Enum):
     ALLIED = 'Allied'
     CIVILIAN = 'Civilian'
     MILITARY_ADVERSARY = 'Military Adversary'
+    MILITARY_NEUTRAL = 'Military Neutral'
     NON_MINUS_MILITARY_ADVERSARY = 'Non-Military Adversary'
 
     @classmethod

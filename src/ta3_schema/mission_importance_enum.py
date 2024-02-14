@@ -26,7 +26,7 @@ class MissionImportanceEnum(str, Enum):
     """
     allowed enum values
     """
-    NONE = 'none'
+    LOW = 'low'
     NORMAL = 'normal'
     IMPORTANT = 'important'
     PRIORITY = 'priority'

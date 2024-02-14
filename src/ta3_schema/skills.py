@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field
-from typing import Any, ClassVar, Dict, List, Union
-from typing_extensions import Annotated
+from pydantic import BaseModel
+from typing import Any, ClassVar, Dict, List
+from .skill_level_enum import SkillLevelEnum
 from .skill_type_enum import SkillTypeEnum
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +29,7 @@ class Skills(BaseModel):
     A skill possessed by a character at a certain level of proficiency
     """ # noqa: E501
     skill_type: SkillTypeEnum
-    level: Union[Annotated[float, Field(le=10.0, strict=True, ge=0.0)], Annotated[int, Field(le=10, strict=True, ge=0)]] = Field(description="the level of expertise (from 0-10) the character has in the skill")
+    level: SkillLevelEnum
     __properties: ClassVar[List[str]] = ["skill_type", "level"]
 
     model_config = {

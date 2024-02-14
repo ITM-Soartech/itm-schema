@@ -37,7 +37,7 @@ class SimEnvironment(BaseModel):
     Environmental elements that impact simulation configuration
     """ # noqa: E501
     unstructured: Optional[StrictStr] = Field(default=None, description="Natural language, plain text description of the environment")
-    type: Optional[SimEnvironmentTypeEnum] = None
+    type: SimEnvironmentTypeEnum
     weather: Optional[WeatherTypeEnum] = None
     terrain: Optional[TerrainTypeEnum] = None
     flora: Optional[FloraTypeEnum] = None

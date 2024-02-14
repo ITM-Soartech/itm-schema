@@ -29,6 +29,7 @@ class MentalStatusEnum(str, Enum):
     AGONY = 'AGONY'
     CALM = 'CALM'
     CONFUSED = 'CONFUSED'
+    SHOCK = 'SHOCK'
     UPSET = 'UPSET'
     UNRESPONSIVE = 'UNRESPONSIVE'
 

@@ -18,34 +18,24 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class InjuryTriggerEnum(str, Enum):
+class RaceEnum(str, Enum):
     """
-    What source caused character injuries
+    Race or ethnicity
     """
 
     """
     allowed enum values
     """
-    EXPLOSION = 'explosion'
-    FIREARM = 'firearm'
-    FALL = 'fall'
-    FIGHT = 'fight'
-    PATHOGEN = 'pathogen'
-    POISON = 'poison'
-    ANIMAL = 'animal'
-    PLANT = 'plant'
-    WATER = 'water'
-    COLLISION = 'collision'
-    ELECTRICAL = 'electrical'
-    EQUIPMENT = 'equipment'
-    ATTACK = 'attack'
-    FIRE = 'fire'
-    STRESS = 'stress'
-    CHEMICAL = 'chemical'
+    AMERICAN_INDIAN = 'American Indian'
+    WHITE = 'White'
+    HISPANIC = 'Hispanic'
+    BLACK = 'Black'
+    ASIAN = 'Asian'
+    PACIFIC_ISLANDER = 'Pacific Islander'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of InjuryTriggerEnum from a JSON string"""
+        """Create an instance of RaceEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

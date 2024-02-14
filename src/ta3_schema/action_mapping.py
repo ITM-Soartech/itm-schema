@@ -17,25 +17,32 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from .action_type_enum import ActionTypeEnum
+from .conditions import Conditions
+from .semantic_type_enum import SemanticTypeEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
-class Action(BaseModel):
+class ActionMapping(BaseModel):
     """
-    An action taken by an ADM
+    Details for how a given action maps to a probe response
     """ # noqa: E501
     action_id: StrictStr = Field(description="A unique action ID within the scenario")
     action_type: ActionTypeEnum
-    unstructured: Optional[StrictStr] = Field(default=None, description="Natural language, plain text description of the action")
+    unstructured: StrictStr = Field(description="Natural language, plain text description of the action")
+    repeatable: Optional[StrictBool] = Field(default=False, description="Whether or not this action should remain after it's selected by an ADM")
     character_id: Optional[StrictStr] = Field(default=None, description="The ID of the character being acted upon")
     parameters: Optional[Dict[str, StrictStr]] = Field(default=None, description="key-value pairs containing additional [action-specific parameters](https://github.com/NextCenturyCorporation/itm-evaluation-client?tab=readme-ov-file#available-actions)")
-    justification: Optional[StrictStr] = Field(default=None, description="A justification of the action taken")
+    probe_id: StrictStr = Field(description="A valid probe_id from the appropriate TA1")
+    choice: StrictStr = Field(description="A valid choice for the specified probe_id")
+    next_scene: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The next scene in the scenario, by index")
     kdma_association: Optional[Dict[str, Union[Annotated[float, Field(le=1.0, strict=True, ge=0.0)], Annotated[int, Field(le=1, strict=True, ge=0)]]]] = Field(default=None, description="KDMA associations for this choice, if provided by TA1")
-    __properties: ClassVar[List[str]] = ["action_id", "action_type", "unstructured", "character_id", "parameters", "justification", "kdma_association"]
+    condition_semantics: Optional[SemanticTypeEnum] = None
+    conditions: Optional[Conditions] = None
+    __properties: ClassVar[List[str]] = ["action_id", "action_type", "unstructured", "repeatable", "character_id", "parameters", "probe_id", "choice", "next_scene", "kdma_association", "condition_semantics", "conditions"]
 
     model_config = {
         "populate_by_name": True,
@@ -55,7 +62,7 @@ class Action(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of Action from a JSON string"""
+        """Create an instance of ActionMapping from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,11 +83,14 @@ class Action(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of conditions
+        if self.conditions:
+            _dict['conditions'] = self.conditions.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of Action from a dict"""
+        """Create an instance of ActionMapping from a dict"""
         if obj is None:
             return None
 
@@ -91,10 +101,15 @@ class Action(BaseModel):
             "action_id": obj.get("action_id"),
             "action_type": obj.get("action_type"),
             "unstructured": obj.get("unstructured"),
+            "repeatable": obj.get("repeatable") if obj.get("repeatable") is not None else False,
             "character_id": obj.get("character_id"),
             "parameters": obj.get("parameters"),
-            "justification": obj.get("justification"),
-            "kdma_association": obj.get("kdma_association")
+            "probe_id": obj.get("probe_id"),
+            "choice": obj.get("choice"),
+            "next_scene": obj.get("next_scene"),
+            "kdma_association": obj.get("kdma_association"),
+            "condition_semantics": obj.get("condition_semantics"),
+            "conditions": Conditions.from_dict(obj["conditions"]) if obj.get("conditions") is not None else None
         })
         return _obj
 

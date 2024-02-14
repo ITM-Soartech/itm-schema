@@ -18,12 +18,13 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from typing_extensions import Annotated
+from typing import Any, ClassVar, Dict, List, Optional
 from .aid_delay import AidDelay
+from .air_quality_enum import AirQualityEnum
 from .injury_trigger_enum import InjuryTriggerEnum
 from .movement_restriction_enum import MovementRestrictionEnum
 from .oxygen_levels_enum import OxygenLevelsEnum
+from .population_density_enum import PopulationDensityEnum
 from .sound_restriction_enum import SoundRestrictionEnum
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,13 +34,13 @@ class DecisionEnvironment(BaseModel):
     Environmental elements that impact decision-making
     """ # noqa: E501
     unstructured: StrictStr = Field(description="Natural language, plain text description of decision-impacting environmental factors")
-    aid_delay: Optional[AidDelay] = None
+    aid_delay: Optional[List[AidDelay]] = Field(default=None, description="A list of evacuation opportunities")
     movement_restriction: Optional[MovementRestrictionEnum] = None
     sound_restriction: Optional[SoundRestrictionEnum] = None
     oxygen_levels: Optional[OxygenLevelsEnum] = None
-    population_density: Optional[Union[Annotated[float, Field(le=50000.0, strict=True, ge=0.0)], Annotated[int, Field(le=50000, strict=True, ge=0)]]] = Field(default=None, description="Population per square mile")
+    population_density: Optional[PopulationDensityEnum] = None
     injury_triggers: Optional[InjuryTriggerEnum] = None
-    air_quality: Optional[Annotated[int, Field(le=500, strict=True, ge=0)]] = Field(default=None, description="Air Quality Index (AQI); see [airnow.gov](https://www.airnow.gov/aqi/aqi-basics/)")
+    air_quality: Optional[AirQualityEnum] = None
     city_infrastructure: Optional[StrictStr] = Field(default=None, description="Refers to building/city infrastructure that should be noted and known (safe house, etc.)")
     __properties: ClassVar[List[str]] = ["unstructured", "aid_delay", "movement_restriction", "sound_restriction", "oxygen_levels", "population_density", "injury_triggers", "air_quality", "city_infrastructure"]
 
@@ -82,9 +83,13 @@ class DecisionEnvironment(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of aid_delay
+        # override the default output from pydantic by calling `to_dict()` of each item in aid_delay (list)
+        _items = []
         if self.aid_delay:
-            _dict['aid_delay'] = self.aid_delay.to_dict()
+            for _item in self.aid_delay:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['aid_delay'] = _items
         return _dict
 
     @classmethod
@@ -98,7 +103,7 @@ class DecisionEnvironment(BaseModel):
 
         _obj = cls.model_validate({
             "unstructured": obj.get("unstructured"),
-            "aid_delay": AidDelay.from_dict(obj["aid_delay"]) if obj.get("aid_delay") is not None else None,
+            "aid_delay": [AidDelay.from_dict(_item) for _item in obj["aid_delay"]] if obj.get("aid_delay") is not None else None,
             "movement_restriction": obj.get("movement_restriction"),
             "sound_restriction": obj.get("sound_restriction"),
             "oxygen_levels": obj.get("oxygen_levels"),

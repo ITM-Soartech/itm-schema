@@ -27,11 +27,11 @@ class VisibilityTypeEnum(str, Enum):
     allowed enum values
     """
     NONE = 'none'
+    VERY_LOW = 'very low'
     LOW = 'low'
-    NORMAL = 'normal'
+    MODERATE = 'moderate'
     GOOD = 'good'
     EXCELLENT = 'excellent'
-    VARIABLE = 'variable'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

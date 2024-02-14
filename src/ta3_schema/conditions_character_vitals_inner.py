@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from .vitals import Vitals
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,8 +27,8 @@ class ConditionsCharacterVitalsInner(BaseModel):
     """
     The minimum vitals of the specified character
     """ # noqa: E501
-    character_id: Optional[StrictStr] = Field(default=None, description="The ID of the character in question")
-    vitals: Optional[Vitals] = None
+    character_id: StrictStr = Field(description="The ID of the character in question")
+    vitals: Vitals
     __properties: ClassVar[List[str]] = ["character_id", "vitals"]
 
     model_config = {

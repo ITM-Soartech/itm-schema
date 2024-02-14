@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from .aid_type_enum import AidTypeEnum
@@ -28,10 +28,11 @@ class AidDelay(BaseModel):
     """
     Properties related to CASEVAC or MEDEVAC
     """ # noqa: E501
+    id: StrictStr = Field(description="An identifier for the evacuation opportunity, unique within the scene")
     delay: Union[Annotated[float, Field(strict=True, ge=1.0)], Annotated[int, Field(strict=True, ge=1)]] = Field(description="CASEVAC or MEDEVAC timer, in minutes")
     type: Optional[AidTypeEnum] = None
     max_transport: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Maximum number of casualties that can be transported")
-    __properties: ClassVar[List[str]] = ["delay", "type", "max_transport"]
+    __properties: ClassVar[List[str]] = ["id", "delay", "type", "max_transport"]
 
     model_config = {
         "populate_by_name": True,
@@ -84,6 +85,7 @@ class AidDelay(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
             "delay": obj.get("delay"),
             "type": obj.get("type"),
             "max_transport": obj.get("max_transport")

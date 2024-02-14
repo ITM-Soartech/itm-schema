@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, Field, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from .action import Action
+from .action_mapping import ActionMapping
 from .action_type_enum import ActionTypeEnum
 from .conditions import Conditions
 from .probe_config import ProbeConfig
@@ -36,14 +36,14 @@ class Scene(BaseModel):
     """ # noqa: E501
     index: Annotated[int, Field(strict=True, ge=0)] = Field(description="The order the scene appears in the scenario")
     state: Optional[State] = None
-    end_scenario_allowed: StrictBool = Field(description="Whether ADMs can end the scenario during this scene")
+    end_scene_allowed: StrictBool = Field(description="Whether ADMs can explicitly end the scene")
     probe_config: Optional[List[ProbeConfig]] = Field(default=None, description="TA1-provided probe configuration, ignored by TA3")
     tagging: Optional[Tagging] = None
-    action_mapping: List[Action] = Field(description="List of actions with details of how those actions map to probe responses")
+    action_mapping: List[ActionMapping] = Field(description="List of actions with details of how those actions map to probe responses")
     restricted_actions: Optional[List[ActionTypeEnum]] = Field(default=None, description="List of actions that will be excluded from get_available_actions")
     transition_semantics: Optional[SemanticTypeEnum] = None
     transitions: Optional[Conditions] = None
-    __properties: ClassVar[List[str]] = ["index", "state", "end_scenario_allowed", "probe_config", "tagging", "action_mapping", "restricted_actions", "transition_semantics", "transitions"]
+    __properties: ClassVar[List[str]] = ["index", "state", "end_scene_allowed", "probe_config", "tagging", "action_mapping", "restricted_actions", "transition_semantics", "transitions"]
 
     model_config = {
         "populate_by_name": True,
@@ -121,10 +121,10 @@ class Scene(BaseModel):
         _obj = cls.model_validate({
             "index": obj.get("index"),
             "state": State.from_dict(obj["state"]) if obj.get("state") is not None else None,
-            "end_scenario_allowed": obj.get("end_scenario_allowed"),
+            "end_scene_allowed": obj.get("end_scene_allowed"),
             "probe_config": [ProbeConfig.from_dict(_item) for _item in obj["probe_config"]] if obj.get("probe_config") is not None else None,
             "tagging": Tagging.from_dict(obj["tagging"]) if obj.get("tagging") is not None else None,
-            "action_mapping": [Action.from_dict(_item) for _item in obj["action_mapping"]] if obj.get("action_mapping") is not None else None,
+            "action_mapping": [ActionMapping.from_dict(_item) for _item in obj["action_mapping"]] if obj.get("action_mapping") is not None else None,
             "restricted_actions": obj.get("restricted_actions"),
             "transition_semantics": obj.get("transition_semantics"),
             "transitions": Conditions.from_dict(obj["transitions"]) if obj.get("transitions") is not None else None

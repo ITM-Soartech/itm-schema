@@ -18,34 +18,22 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class InjuryTriggerEnum(str, Enum):
+class HeartRateEnum(str, Enum):
     """
-    What source caused character injuries
+    Descriptive heart rate
     """
 
     """
     allowed enum values
     """
-    EXPLOSION = 'explosion'
-    FIREARM = 'firearm'
-    FALL = 'fall'
-    FIGHT = 'fight'
-    PATHOGEN = 'pathogen'
-    POISON = 'poison'
-    ANIMAL = 'animal'
-    PLANT = 'plant'
-    WATER = 'water'
-    COLLISION = 'collision'
-    ELECTRICAL = 'electrical'
-    EQUIPMENT = 'equipment'
-    ATTACK = 'attack'
-    FIRE = 'fire'
-    STRESS = 'stress'
-    CHEMICAL = 'chemical'
+    NONE = 'NONE'
+    FAINT = 'FAINT'
+    NORMAL = 'NORMAL'
+    FAST = 'FAST'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of InjuryTriggerEnum from a JSON string"""
+        """Create an instance of HeartRateEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

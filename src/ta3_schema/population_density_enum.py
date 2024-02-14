@@ -18,34 +18,25 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class InjuryTriggerEnum(str, Enum):
+class PopulationDensityEnum(str, Enum):
     """
-    What source caused character injuries
+    persons per square meter, each successive term is one more person per square meter
     """
 
     """
     allowed enum values
     """
-    EXPLOSION = 'explosion'
-    FIREARM = 'firearm'
-    FALL = 'fall'
-    FIGHT = 'fight'
-    PATHOGEN = 'pathogen'
-    POISON = 'poison'
-    ANIMAL = 'animal'
-    PLANT = 'plant'
-    WATER = 'water'
-    COLLISION = 'collision'
-    ELECTRICAL = 'electrical'
-    EQUIPMENT = 'equipment'
-    ATTACK = 'attack'
-    FIRE = 'fire'
-    STRESS = 'stress'
-    CHEMICAL = 'chemical'
+    NONE = 'none'
+    SPARSE = 'sparse'
+    SOME = 'some'
+    BUSY = 'busy'
+    CROWDED = 'crowded'
+    VERY_CROWDED = 'very crowded'
+    EXTREME = 'extreme'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of InjuryTriggerEnum from a JSON string"""
+        """Create an instance of PopulationDensityEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

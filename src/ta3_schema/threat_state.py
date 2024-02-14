@@ -28,7 +28,7 @@ class ThreatState(BaseModel):
     Description of the current threat to the characters, including the medic
     """ # noqa: E501
     unstructured: StrictStr = Field(description="Natural language, plain text description of environmental threats")
-    threats: List[Threat] = Field(description="A list of pairs of threat types with a numeric severity indicator")
+    threats: List[Threat] = Field(description="A list of pairs of threat types with a severity descriptor")
     __properties: ClassVar[List[str]] = ["unstructured", "threats"]
 
     model_config = {

@@ -38,10 +38,8 @@ class SupplyTypeEnum(str, Enum):
     PAIN_MEDICATIONS = 'Pain Medications'
     SPLINT = 'Splint'
     BLOOD = 'Blood'
-    MINOR_SURGICAL_KIT = 'Minor surgical kit'
-    IV_FLUIDS = 'IV Fluids'
-    CRICOTHYROIDOTOMY_KIT = 'Cricothyroidotomy kit'
-    ET_INTUBATION_KIT = 'ET Intubation Kit'
+    IV_BAG = 'IV Bag'
+    BURN_DRESSING = 'Burn Dressing'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

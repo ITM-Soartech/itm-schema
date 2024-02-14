@@ -17,10 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from typing_extensions import Annotated
+from pydantic import BaseModel, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from .injury_location_enum import InjuryLocationEnum
+from .injury_severity_enum import InjurySeverityEnum
 from .injury_status_enum import InjuryStatusEnum
 from .injury_type_enum import InjuryTypeEnum
 from typing import Optional, Set
@@ -32,9 +32,10 @@ class Injury(BaseModel):
     """ # noqa: E501
     name: InjuryTypeEnum
     location: InjuryLocationEnum
-    severity: Optional[Union[Annotated[float, Field(le=1.0, strict=True, ge=0.0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="A numerical indication of the severity of the injury from low (0.0) to high (1.0)")
+    severity: Optional[InjurySeverityEnum] = None
     status: InjuryStatusEnum
-    __properties: ClassVar[List[str]] = ["name", "location", "severity", "status"]
+    source_character: Optional[StrictStr] = Field(default=None, description="The character id of the person responsible for the injury, subject to the character's `directness_of_causality`")
+    __properties: ClassVar[List[str]] = ["name", "location", "severity", "status", "source_character"]
 
     model_config = {
         "populate_by_name": True,
@@ -90,7 +91,8 @@ class Injury(BaseModel):
             "name": obj.get("name"),
             "location": obj.get("location"),
             "severity": obj.get("severity"),
-            "status": obj.get("status")
+            "status": obj.get("status"),
+            "source_character": obj.get("source_character")
         })
         return _obj
 

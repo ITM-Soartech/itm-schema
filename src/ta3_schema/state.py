@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictBool, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from .character import Character
 from .environment import Environment
 from .mission import Mission
@@ -32,7 +32,7 @@ class State(BaseModel):
     the current tactical & environmental state of the scenario and of its characters
     """ # noqa: E501
     unstructured: StrictStr = Field(description="Natural language, plain text description of a scene's state")
-    elapsed_time: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="the elapsed time (in minutes) since the scenario started")
+    elapsed_time: Optional[StrictInt] = Field(default=None, description="the simulated elapsed time (in seconds) since the scenario started")
     scenario_complete: Optional[StrictBool] = Field(default=None, description="set to true if the scenario is complete; subsequent calls involving that scenario will return an error code")
     mission: Optional[Mission] = None
     environment: Environment

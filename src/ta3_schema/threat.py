@@ -17,9 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Union
-from typing_extensions import Annotated
+from pydantic import BaseModel
+from typing import Any, ClassVar, Dict, List
+from .threat_severity_enum import ThreatSeverityEnum
+from .threat_type_enum import ThreatTypeEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,8 +28,8 @@ class Threat(BaseModel):
     """
     threats in the environment that could affect decision-making
     """ # noqa: E501
-    threat_type: StrictStr = Field(description="the type or nature of the threat, may become a controlled vocabulary")
-    severity: Union[Annotated[float, Field(le=1.0, strict=True, ge=0.0)], Annotated[int, Field(le=1, strict=True, ge=0)]] = Field(description="how severe/imminent the threat is, from 0 (no threat) to 1 (max severity)")
+    threat_type: ThreatTypeEnum
+    severity: ThreatSeverityEnum
     __properties: ClassVar[List[str]] = ["threat_type", "severity"]
 
     model_config = {

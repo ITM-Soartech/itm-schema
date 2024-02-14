@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, Field, StrictBool
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from .supply_type_enum import SupplyTypeEnum
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class Supplies(BaseModel):
     a single type of medical supply available to the medic
     """ # noqa: E501
     type: SupplyTypeEnum
-    reusable: StrictBool = Field(description="Whether or not item is consumable/reusable")
+    reusable: Optional[StrictBool] = Field(default=False, description="Whether or not item is consumable/reusable")
     quantity: Annotated[int, Field(le=999, strict=True, ge=0)] = Field(description="Number of items available in the medical bag")
     __properties: ClassVar[List[str]] = ["type", "reusable", "quantity"]
 
@@ -85,7 +85,7 @@ class Supplies(BaseModel):
 
         _obj = cls.model_validate({
             "type": obj.get("type"),
-            "reusable": obj.get("reusable"),
+            "reusable": obj.get("reusable") if obj.get("reusable") is not None else False,
             "quantity": obj.get("quantity")
         })
         return _obj

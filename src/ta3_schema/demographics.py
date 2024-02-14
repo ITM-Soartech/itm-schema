@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from .character_role_enum import CharacterRoleEnum
@@ -27,6 +27,7 @@ from .military_disposition_enum import MilitaryDispositionEnum
 from .military_rank_enum import MilitaryRankEnum
 from .military_rank_title_enum import MilitaryRankTitleEnum
 from .mission_importance_enum import MissionImportanceEnum
+from .race_enum import RaceEnum
 from .skills import Skills
 from typing import Optional, Set
 from typing_extensions import Self
@@ -37,12 +38,12 @@ class Demographics(BaseModel):
     """ # noqa: E501
     age: Optional[Annotated[int, Field(le=125, strict=True, ge=0)]] = Field(default=None, description="the age of the character, omit if unknown")
     sex: DemographicSexEnum
-    race: StrictStr = Field(description="Race or ethnicity")
+    race: RaceEnum
     military_disposition: Optional[MilitaryDispositionEnum] = None
     military_branch: Optional[MilitaryBranchEnum] = None
     rank: Optional[MilitaryRankEnum] = None
     rank_title: Optional[MilitaryRankTitleEnum] = None
-    skills: Optional[List[Skills]] = Field(default=None, description="A list of pairs of skill type and numeric skill level")
+    skills: Optional[List[Skills]] = Field(default=None, description="A list of pairs of skill type and descriptive skill level")
     role: Optional[CharacterRoleEnum] = None
     mission_importance: Optional[MissionImportanceEnum] = None
     __properties: ClassVar[List[str]] = ["age", "sex", "race", "military_disposition", "military_branch", "rank", "rank_title", "skills", "role", "mission_importance"]

@@ -28,6 +28,7 @@ class BreathingLevelEnum(str, Enum):
     """
     NORMAL = 'NORMAL'
     FAST = 'FAST'
+    SLOW = 'SLOW'
     RESTRICTED = 'RESTRICTED'
     NONE = 'NONE'
 

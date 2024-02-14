@@ -18,10 +18,13 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from typing_extensions import Annotated
+from typing import Any, ClassVar, Dict, List, Optional
+from .character_tag_enum import CharacterTagEnum
 from .demographics import Demographics
+from .directness_enum import DirectnessEnum
 from .injury import Injury
+from .intent_enum import IntentEnum
+from .rapport_enum import RapportEnum
 from .vitals import Vitals
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,12 +37,15 @@ class Character(BaseModel):
     name: StrictStr = Field(description="display name, as in a dashboard")
     unstructured: StrictStr = Field(description="Natural language, plain text description of the character")
     unstructured_postassess: Optional[StrictStr] = Field(default=None, description="unstructured description updated after character assessment")
-    rapport: Optional[Union[Annotated[float, Field(le=10.0, strict=True, ge=0.0)], Annotated[int, Field(le=10, strict=True, ge=0)]]] = Field(default=None, description="A measure of closeness or affinity towards the player/medic; 0 represents strong dislike, 10 represents very close relationships like family")
+    intent: Optional[IntentEnum] = None
+    directness_of_causality: Optional[DirectnessEnum] = None
+    rapport: Optional[RapportEnum] = None
     demographics: Demographics
     injuries: Optional[List[Injury]] = Field(default=None, description="A list of Injuries for the character")
     vitals: Optional[Vitals] = None
     visited: Optional[StrictBool] = Field(default=False, description="whether or not this character has been visited by the ADM in the current scenario")
-    __properties: ClassVar[List[str]] = ["id", "name", "unstructured", "unstructured_postassess", "rapport", "demographics", "injuries", "vitals", "visited"]
+    tag: Optional[CharacterTagEnum] = None
+    __properties: ClassVar[List[str]] = ["id", "name", "unstructured", "unstructured_postassess", "intent", "directness_of_causality", "rapport", "demographics", "injuries", "vitals", "visited", "tag"]
 
     model_config = {
         "populate_by_name": True,
@@ -109,11 +115,14 @@ class Character(BaseModel):
             "name": obj.get("name"),
             "unstructured": obj.get("unstructured"),
             "unstructured_postassess": obj.get("unstructured_postassess"),
+            "intent": obj.get("intent"),
+            "directness_of_causality": obj.get("directness_of_causality"),
             "rapport": obj.get("rapport"),
             "demographics": Demographics.from_dict(obj["demographics"]) if obj.get("demographics") is not None else None,
             "injuries": [Injury.from_dict(_item) for _item in obj["injuries"]] if obj.get("injuries") is not None else None,
             "vitals": Vitals.from_dict(obj["vitals"]) if obj.get("vitals") is not None else None,
-            "visited": obj.get("visited") if obj.get("visited") is not None else False
+            "visited": obj.get("visited") if obj.get("visited") is not None else False,
+            "tag": obj.get("tag")
         })
         return _obj
 
