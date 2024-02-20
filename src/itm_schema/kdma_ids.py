@@ -4,7 +4,7 @@ class KDMAId(str, Enum):
     """
     KDMA Identifier Strings
     """
-    maximization = "Maximization"
+    maximization = "maximization"
     risk_tol = "RiskTolerance"
     negative_urgency = "NegativeUrgency"
     ambiguity_tol = "AmbiguityTolerance"
