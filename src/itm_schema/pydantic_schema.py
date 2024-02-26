@@ -20,7 +20,7 @@ class KDMA(ValidatedBaseModel):
     """
     Single KDMA value with values between 0 and 1
     """
-    name: KDMAId = Field(description="Name of KDMA.")
+    kdma: KDMAId = Field(description="Name of KDMA.")
     value: float = Field(
         description="Numeric score for a given KDMA, 0-1 scale.",
         ge=0.0, le=1.0
