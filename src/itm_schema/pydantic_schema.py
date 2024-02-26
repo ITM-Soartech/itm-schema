@@ -107,7 +107,7 @@ class AlignmentTarget(ValidatedBaseModel):
         # count kdma names to find duplicate entries
         counts = {}
         for kdma in kdmas:
-            name = kdma.name.value
+            name = kdma.kdma.value
             if name not in counts:
                 counts[name] = 0
             counts[name] += 1
