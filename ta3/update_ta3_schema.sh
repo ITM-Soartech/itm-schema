@@ -1,6 +1,6 @@
 #! /bin/bash
 
-current_schema_url='https://raw.githubusercontent.com/NextCenturyCorporation/itm-scenario-validator/main/api_files/api.yaml'
+current_schema_url='https://raw.githubusercontent.com/NextCenturyCorporation/itm-evaluation-server/development/swagger/swagger.yaml'
 script_dir=$(dirname $0) # directory containing this script
 infile="${script_dir}/current_schema.yaml" # path to ta3 OpenAPI schema yaml
 wget -O ${infile} ${current_schema_url} # download latest schema yaml
