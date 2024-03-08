@@ -37,8 +37,8 @@ class Vitals(BaseModel):
     mental_status: Optional[MentalStatusEnum] = None
     breathing: Optional[BreathingLevelEnum] = None
     heart_rate: Optional[HeartRateEnum] = None
-    spo2: Optional[Union[Annotated[float, Field(le=100.0, strict=True, ge=0.0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="blood oxygen level (percentage)", alias="Spo2")
-    __properties: ClassVar[List[str]] = ["conscious", "avpu", "ambulatory", "mental_status", "breathing", "heart_rate", "Spo2"]
+    spo2: Optional[Union[Annotated[float, Field(le=100.0, strict=True, ge=0.0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="blood oxygen level (percentage)", alias="spo2")
+    __properties: ClassVar[List[str]] = ["conscious", "avpu", "ambulatory", "mental_status", "breathing", "heart_rate", "spo2"]
 
     model_config = {
         "populate_by_name": True,
@@ -97,7 +97,7 @@ class Vitals(BaseModel):
             "mental_status": obj.get("mental_status"),
             "breathing": obj.get("breathing"),
             "heart_rate": obj.get("heart_rate"),
-            "Spo2": obj.get("Spo2")
+            "spo2": obj.get("spo2")
         })
         return _obj
 
