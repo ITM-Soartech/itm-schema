@@ -81,7 +81,7 @@ class AlignmentTarget(ValidatedBaseModel):
     Desired profile of KDMA values for an algorithmic decision maker to align to.
     """
     id: str = Field(description="Globally unique ID for profile")
-    kdmas: list[KDMA] = Field(description='kdmas for target')
+    kdma_values: list[KDMA] = Field(description='kdmas for target')
 
     @field_validator('kdmas')
     @classmethod
