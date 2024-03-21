@@ -3,7 +3,7 @@ Contains pydantic models for machine learning pipeline objects.
 """
 from typing import Optional, List, Dict
 from sklearn.neighbors import KernelDensity
-from .kdma_ids import KDMAId
+from itm_schema.src.itm_schema.kdma_ids import KDMAId
 from . import pydantic_schema as ps
 
 class SimpleHistogram(ps.ValidatedBaseModel):

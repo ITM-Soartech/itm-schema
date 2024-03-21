@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Optional
 from enum import Enum
-from itm_schema.kdma_ids import KDMAId
+from itm_schema.src.itm_schema.kdma_ids import KDMAId
 
 
 class ValidatedBaseModel(BaseModel):
