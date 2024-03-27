@@ -5,6 +5,8 @@ from typing import Optional, List, Dict
 from sklearn.neighbors import KernelDensity
 from .kdma_ids import KDMAId
 from . import pydantic_schema as ps
+from pydantic import field_serializer
+import numpy as np
 
 class SimpleHistogram(ps.ValidatedBaseModel):
     # Should match output of np.histogram
@@ -28,6 +30,14 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
 
     # histogram representation of KDMA
     hist: Optional[SimpleHistogram]
+
+    @field_serializer('kde')
+    def serialize_kde(self, kde: KernelDensity, _info) -> list[float]:
+        X = np.linspace(0, 1, 100)[:, np.newaxis]
+        log_dens = kde.score_samples(X)
+        samples = np.exp(log_dens)
+        print(samples)
+        return list(samples)
 
     class Config:
         # Allow non-pydantic KernelDensity
