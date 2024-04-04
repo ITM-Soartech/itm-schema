@@ -50,11 +50,16 @@ class ReferenceDistribution(ps.ValidatedBaseModel):
     """
     rdms: Dict[str, KDMAProfile]
 
+
 class AlignmentTarget(ps.ValidatedBaseModel):
     """
-    Dict's str is the dm_id 
+    Alignment Target
     """
+    target_short_name: str
+
+    # str: Decision Maker ID
     target: Dict[str, KDMAProfile]
+
 
 class KDMAAlignment(ps.ValidatedBaseModel):
     """
