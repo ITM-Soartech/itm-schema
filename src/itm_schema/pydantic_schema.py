@@ -202,10 +202,10 @@ class AlignmentDistribution(ValidatedBaseModel):
     target_id: str
 
     # List of alignment scores
-    alignment_scores: List[float]
+    alignment_scores: list[float]
 
     # List of cumulative density scores
-    cumulative_density: List[float]
+    cumulative_density: list[float]
 
 
 if __name__ == "__main__":
