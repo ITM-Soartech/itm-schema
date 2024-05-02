@@ -1,18 +1,20 @@
 """
 Contains pydantic models for machine learning pipeline objects.
 """
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Union
 from sklearn.neighbors import KernelDensity
 from .kdma_ids import KDMAId
 from . import pydantic_schema as ps
-from pydantic import field_serializer
+from pydantic import field_serializer, field_validator
 import numpy as np
+
+KDE_MAX_VALUE = 1.0 # Value ranges from 0 to 1.0
+KDE_BANDWIDTH = 0.75 * (KDE_MAX_VALUE / 10.0)
 
 class SimpleHistogram(ps.ValidatedBaseModel):
     # Should match output of np.histogram
     bin_values: List[float]
     bin_edges: List[float]
-
 
 
 class KDMAMeasurement(ps.ValidatedBaseModel):
@@ -26,7 +28,7 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     value: float
 
     # probability distribution representation of KDMA
-    kde: Optional[KernelDensity]
+    kde: Optional[Union[list[float],KernelDensity]]
 
     # histogram representation of KDMA
     hist: Optional[SimpleHistogram]
@@ -38,6 +40,16 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
         samples = np.exp(log_dens)
         print(samples)
         return list(samples)
+
+
+    @field_validator('kde')
+    @classmethod
+    def validate_kde(cls, kde: Union[list[float], KernelDensity]) -> Optional[KernelDensity]:
+        if isinstance(kde, KernelDensity):
+            return kde
+        else:
+            X = np.array(kde)
+            return KernelDensity(kernel="gaussian", bandwidth=KDE_BANDWIDTH).fit(X[:, np.newaxis])
 
     class Config:
         # Allow non-pydantic KernelDensity
