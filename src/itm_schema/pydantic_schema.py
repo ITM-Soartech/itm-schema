@@ -187,8 +187,25 @@ class ProbeResponseTableEntry(ValidatedBaseModel):
     and contain extra fields like timestamp
     """
     pass
-    
-    
+
+
+class AlignmentDistribution(ValidatedBaseModel):
+    """
+    Information about the alignment alignment distribution (i.e. CDF) for a scenario/target pair
+    The lists of alignment_scores and cumulative_density may not contain *all* possible scores
+      (as this number may be very large) but may be uniformly downsampled from the source
+    """
+    # Scenario ID
+    scenario_id: str
+
+    # Alignment Target ID
+    target_id: str
+
+    # List of alignment scores
+    alignment_scores: list[float]
+
+    # List of cumulative density scores
+    cumulative_density: list[float]
 
 
 if __name__ == "__main__":
