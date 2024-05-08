@@ -28,6 +28,10 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     value: float
 
     # probability distribution representation of KDMA
+    #   We use a union with a list here so FastAPI can
+    #   create the object with the list passed in from the
+    #   server. The kde field_validator will convert it to
+    #   a KernelDensity object automatically
     kde: Optional[Union[list[float],KernelDensity]]
 
     # histogram representation of KDMA
@@ -48,8 +52,18 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
         if isinstance(kde, KernelDensity):
             return kde
         else:
-            X = np.array(kde)
-            return KernelDensity(kernel="gaussian", bandwidth=KDE_BANDWIDTH).fit(X[:, np.newaxis])
+            kde_list = np.array(kde)
+
+            # resample from the frequency dist
+            freq = np.array(kde_list * 100, dtype='int')
+            samples = []
+            for n, val in zip(freq, np.linspace(0, 1, len(freq))):
+                samples.extend([val] * n)
+            samples = np.array(samples)
+
+            # Use a small bandwidth so we have a tight fit to the sampled KDE
+            kde_out = KernelDensity(kernel="gaussian", bandwidth=0.01).fit(samples[:, np.newaxis])
+            return kde_out
 
     class Config:
         # Allow non-pydantic KernelDensity
