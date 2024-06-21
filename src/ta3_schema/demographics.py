@@ -44,7 +44,7 @@ class Demographics(BaseModel):
     rank: Optional[MilitaryRankEnum] = None
     rank_title: Optional[MilitaryRankTitleEnum] = None
     skills: Optional[List[Skills]] = Field(default=None, description="A list of pairs of skill type and descriptive skill level")
-    role: Optional[CharacterRoleEnum] = None
+    role: Optional[str] = None
     mission_importance: Optional[MissionImportanceEnum] = None
     __properties: ClassVar[List[str]] = ["age", "sex", "race", "military_disposition", "military_branch", "rank", "rank_title", "skills", "role", "mission_importance"]
 
