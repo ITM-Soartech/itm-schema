@@ -4,9 +4,10 @@ class KDMAId(str, Enum):
     """
     KDMA Identifier Strings
     """
+    # TODO make capitalization consistent
     maximization = "maximization"
-    orthodoxy = "orthodoxy"
-    values = "values"
+    orthodoxy = "Orthodoxy"
+    values = "Values"
     risk_tol = "RiskTolerance"
     negative_urgency = "NegativeUrgency"
     ambiguity_tol = "AmbiguityTolerance"
@@ -15,8 +16,8 @@ class KDMAId(str, Enum):
     mission_success = "MissionSuccess"
     deviate_policy = "DeviatePolicy"
     deviate_standards = "DeviateStandards"
-    qol = "quality of life"
-    vol = "value of life"
+    qol = "QualityOfLife"
+    pquant = "PerceivedQuantityOfLivesSaved"
     trait_bias = "TraitBias"
     frugality = "Frugality"
     

@@ -20,29 +20,42 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     # an enum that represented which KDMA this measurement corresponds to
     kdma_id: KDMAId
 
-    # TODO - coordinate with Nick's changes. 
     # Plain value for this KDMA
     value: Optional[float]
 
     # probability distribution representation of KDMA
     kde: Optional[KernelDensity]
 
-    # histogram representation of KDMA
+    # from https://github.com/ITM-Soartech/itm-api/issues/3
+    # The KDE variants that can be made available at this time
+    # (detailed documentation for each variant coming soon):
+    #   - rawscores: 1D KDE; built from raw scores of the probe choices the use
+    #     made. This is the KDE that was used to compute alignment during the
+    #     metric refinement eval.
+    #   - globalnorm: 1d KDE; Same as rawscores but normalized across all
+    #     available choices the user saw in the scenario (for instance, if the
+    #     scenario only had a lowest value of 0.1 and a highest value of 0.9,
+    #     this KDE would be stretched out to be from 0 to 1.
+    #   - localnorm: 1D KDE; Normalized for each probe individually. I.e. did
+    #     the user pick the best possible option available?
+    #   - globalnormx_localnormy: A 2D KDE constructed from globalnorm and
+    #     localnorm. This is the KDE that will be used to compute alignment
+    #     between two decision makers
+    
+    kdes: Optional[dict[str, KernelDensity]]
+
+    # histogram representation of raw scores
     hist: Optional[SimpleHistogram]
 
-    # TODO - coordinate with Nick's changes. 
     # 0 = low confidence, 1 = high confidence
     # Deliberately vague so that different TA1 performers can use different appropriate computations
     confidence: Optional[float]
 
-    # TODO - coordinate with Nick's changes. 
     confidence_reasons: Optional[List[str]]
 
-    # TODO - coordinate with Nick's changes. 
     # Effective Sample size
     kde_ess: Optional[float]
 
-    # TODO - coordinate with Nick's changes. 
     # Number of observations used to build the measurement
     num_observations: Optional[float]
 
@@ -59,13 +72,6 @@ class KDMAProfile(ps.ValidatedBaseModel):
     dm_id: str
     kdma_measurements: Dict[KDMAId, KDMAMeasurement]
 
-
-#todo: stub, expand
-class ReferenceDistribution(ps.ValidatedBaseModel):
-    """
-
-    """
-    rdms: Dict[str, KDMAProfile]
 
 class AlignmentTarget(ps.ValidatedBaseModel):
     """
