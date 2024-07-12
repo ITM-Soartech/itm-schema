@@ -21,10 +21,10 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     kdma_id: KDMAId
 
     # Plain value for this KDMA
-    value: Optional[float]
+    value: Optional[float] = None
 
     # probability distribution representation of KDMA
-    kde: Optional[KernelDensity]
+    kde: Optional[KernelDensity] = None
 
     # from https://github.com/ITM-Soartech/itm-api/issues/3
     # The KDE variants that can be made available at this time
@@ -41,23 +41,23 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     #   - globalnormx_localnormy: A 2D KDE constructed from globalnorm and
     #     localnorm. This is the KDE that will be used to compute alignment
     #     between two decision makers
-
-    kdes: Optional[dict[str, KernelDensity]]
+    
+    kdes: Optional[dict[str, KernelDensity]] = None
 
     # histogram representation of raw scores
-    hist: Optional[SimpleHistogram]
+    hist: Optional[SimpleHistogram] = None
 
     # 0 = low confidence, 1 = high confidence
     # Deliberately vague so that different TA1 performers can use different appropriate computations
-    confidence: Optional[float]
+    confidence: Optional[float] = None
 
-    confidence_reasons: Optional[List[str]]
+    confidence_reasons: Optional[List[str]] = None
 
     # Effective Sample size
-    kde_ess: Optional[float]
+    kde_ess: Optional[float] = None
 
     # Number of observations used to build the measurement
-    num_observations: Optional[float]
+    num_observations: Optional[float] = None
 
     class Config:
         # Allow non-pydantic KernelDensity
@@ -75,7 +75,7 @@ class KDMAProfile(ps.ValidatedBaseModel):
 
 class AlignmentTarget(ps.ValidatedBaseModel):
     """
-    Dict's str is the dm_id
+    Dict's str is the dm_id 
     """
     target: Dict[str, KDMAProfile]
 
@@ -97,7 +97,7 @@ class RDMAlignment(ps.ValidatedBaseModel):
     alignment_detail: KDMAAlignment
 
 
-
+# TODO I think this is unused? Verify that no one is using it and remove
 # used by the alignment visualizer to show an analysis of the quality of the alignment
 class AlignmentPackage(ps.ValidatedBaseModel):
 
@@ -106,9 +106,9 @@ class AlignmentPackage(ps.ValidatedBaseModel):
 
     # 0 = low confidence, 1 = high confidence
     # Deliberately vague so that different TA1 performers can use different appropriate computations
-    confidence: Optional[float]
+    confidence: Optional[float] = None
 
-    confidence_reasons: Optional[List[str]]
+    confidence_reasons: Optional[List[str]] = None
 
     # alignment of the ADM to each invididual RDM in the alignment target
     rdm_alignments: List[RDMAlignment]
@@ -120,6 +120,6 @@ class AlignmentPackage(ps.ValidatedBaseModel):
     aligner_profile: KDMAProfile
     # we might need to distinguish between more than 1 kind of reference distribution
     # reference_distribution: ReferenceDistribution
-
-    # target to which the ADM is aligned
+    
+    # target to which the ADM is aligned 
     alignment_target: AlignmentTarget
