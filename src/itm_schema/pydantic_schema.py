@@ -81,11 +81,11 @@ class AlignmentTarget(ValidatedBaseModel):
     Desired profile of KDMA values for an algorithmic decision maker to align to.
     """
     id: str = Field(description="Globally unique ID for profile")
-    kdmas: list[KDMA] = Field(description='kdmas for target')
+    kdma_values: list[KDMA] = Field(description='kdmas for target')
 
-    @field_validator('kdmas')
+    @field_validator('kdma_values')
     @classmethod
-    def kdmas_are_unique(cls, kdmas: list[KDMA]) -> list[KDMA]:
+    def kdmas_are_unique(cls, kdma_values: list[KDMA]) -> list[KDMA]:
         """
         Ensures there are no duplicate entries for KDMAs for a given target.
 
@@ -93,12 +93,12 @@ class AlignmentTarget(ValidatedBaseModel):
         ----------
         kdma_values: list[KDMA]
             list of KDMAs associated with alignment target.
-        
+
         Returns
         ----------
         kdma_values: list[KDMA]
             Original input is returned if it is valid.
-        
+
         Raises
         -----------
         ValueError: raised if duplicate KDMAs are found
@@ -106,12 +106,12 @@ class AlignmentTarget(ValidatedBaseModel):
 
         # count kdma names to find duplicate entries
         counts = {}
-        for kdma in kdmas:
+        for kdma in kdma_values:
             name = kdma.kdma.value
             if name not in counts:
                 counts[name] = 0
             counts[name] += 1
-        
+
         # note we keep track of all duplicates instead of raising an error
         # the first time one is found so that they can all be listed in
         # the error message.
@@ -120,17 +120,15 @@ class AlignmentTarget(ValidatedBaseModel):
         if duplicates:
             entries = [f"{name} ({count} occurrences)"
                        for name, count in sorted(duplicates.items())]
-            
+
             err_str = "Duplicate entries for kdma{}: {}".format(
                 "" if len(entries) == 1 else "s",
                 ", ".join(entries)
             )
 
             raise ValueError(err_str)
-        
-        return kdmas
-            
-            
+
+        return kdma_values
 
 
 
