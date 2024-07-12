@@ -41,7 +41,7 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     #   - globalnormx_localnormy: A 2D KDE constructed from globalnorm and
     #     localnorm. This is the KDE that will be used to compute alignment
     #     between two decision makers
-    
+
     kdes: Optional[dict[str, KernelDensity]]
 
     # histogram representation of raw scores
@@ -75,7 +75,7 @@ class KDMAProfile(ps.ValidatedBaseModel):
 
 class AlignmentTarget(ps.ValidatedBaseModel):
     """
-    Dict's str is the dm_id 
+    Dict's str is the dm_id
     """
     target: Dict[str, KDMAProfile]
 
@@ -106,9 +106,9 @@ class AlignmentPackage(ps.ValidatedBaseModel):
 
     # 0 = low confidence, 1 = high confidence
     # Deliberately vague so that different TA1 performers can use different appropriate computations
-    confidence: Optional[float]  
+    confidence: Optional[float]
 
-    confidence_reasons: Optional[List[str]]    
+    confidence_reasons: Optional[List[str]]
 
     # alignment of the ADM to each invididual RDM in the alignment target
     rdm_alignments: List[RDMAlignment]
@@ -120,6 +120,6 @@ class AlignmentPackage(ps.ValidatedBaseModel):
     aligner_profile: KDMAProfile
     # we might need to distinguish between more than 1 kind of reference distribution
     # reference_distribution: ReferenceDistribution
-    
-    # target to which the ADM is aligned 
+
+    # target to which the ADM is aligned
     alignment_target: AlignmentTarget
