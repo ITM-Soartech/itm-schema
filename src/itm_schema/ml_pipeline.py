@@ -5,12 +5,12 @@ from typing import Optional, List, Dict
 from sklearn.neighbors import KernelDensity
 from .kdma_ids import KDMAId
 from . import pydantic_schema as ps
+from enum import Enum
 
 class SimpleHistogram(ps.ValidatedBaseModel):
     # Should match output of np.histogram
     bin_values: List[float]
     bin_edges: List[float]
-
 
 
 class KDMAMeasurement(ps.ValidatedBaseModel):
@@ -20,14 +20,31 @@ class KDMAMeasurement(ps.ValidatedBaseModel):
     # an enum that represented which KDMA this measurement corresponds to
     kdma_id: KDMAId
 
+    # TODO - coordinate with Nick's changes. 
     # Plain value for this KDMA
-    value: float
+    value: Optional[float]
 
     # probability distribution representation of KDMA
     kde: Optional[KernelDensity]
 
     # histogram representation of KDMA
     hist: Optional[SimpleHistogram]
+
+    # TODO - coordinate with Nick's changes. 
+    # 0 = low confidence, 1 = high confidence
+    # Deliberately vague so that different TA1 performers can use different appropriate computations
+    confidence: Optional[float]
+
+    # TODO - coordinate with Nick's changes. 
+    confidence_reasons: Optional[List[str]]
+
+    # TODO - coordinate with Nick's changes. 
+    # Effective Sample size
+    kde_ess: Optional[float]
+
+    # TODO - coordinate with Nick's changes. 
+    # Number of observations used to build the measurement
+    num_observations: Optional[float]
 
     class Config:
         # Allow non-pydantic KernelDensity
@@ -63,6 +80,7 @@ class KDMAAlignment(ps.ValidatedBaseModel):
     # this dict contains list of KDMAs for 1 decision maker
     kdma_alignments: Dict[KDMAId, float]
 
+
 class RDMAlignment(ps.ValidatedBaseModel):
     """
     # This object describes the alignment of an ADM to 1 RDM
@@ -72,11 +90,19 @@ class RDMAlignment(ps.ValidatedBaseModel):
     individual_alignment: float
     alignment_detail: KDMAAlignment
 
+
+
 # used by the alignment visualizer to show an analysis of the quality of the alignment
 class AlignmentPackage(ps.ValidatedBaseModel):
 
     # overall alignment of one ADM to the target alignment group
     overall_alignment: float
+
+    # 0 = low confidence, 1 = high confidence
+    # Deliberately vague so that different TA1 performers can use different appropriate computations
+    confidence: Optional[float]  
+
+    confidence_reasons: Optional[List[str]]    
 
     # alignment of the ADM to each invididual RDM in the alignment target
     rdm_alignments: List[RDMAlignment]
