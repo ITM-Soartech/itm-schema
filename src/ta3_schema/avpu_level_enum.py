@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class AvpuLevelEnum(str, Enum):
     """
-    Character level of response.  See [Levels of Response](https://www.firstresponse.org.uk/first-aid-az/3-general/first-aid/79-levels-of-response) for details
+    Character level of response; anything but ALERT is considered unconscious.  See [Levels of Response](https://www.firstresponse.org.uk/first-aid-az/3-general/first-aid/79-levels-of-response) for details
     """
 
     """

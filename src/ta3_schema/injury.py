@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from .injury_location_enum import InjuryLocationEnum
 from .injury_severity_enum import InjurySeverityEnum
 from .injury_status_enum import InjuryStatusEnum
@@ -35,13 +36,15 @@ class Injury(BaseModel):
     severity: Optional[InjurySeverityEnum] = None
     status: InjuryStatusEnum
     source_character: Optional[StrictStr] = Field(default=None, description="The character id of the person responsible for the injury, subject to the character's `directness_of_causality`")
-    __properties: ClassVar[List[str]] = ["name", "location", "severity", "status", "source_character"]
+    treatments_required: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="The number of successful treatments required to treat the injury fully, which sets `status` to `treated`")
+    treatments_applied: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=0, description="The number of successful treatments applied to the injury")
+    __properties: ClassVar[List[str]] = ["name", "location", "severity", "status", "source_character", "treatments_required", "treatments_applied"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -92,7 +95,9 @@ class Injury(BaseModel):
             "location": obj.get("location"),
             "severity": obj.get("severity"),
             "status": obj.get("status"),
-            "source_character": obj.get("source_character")
+            "source_character": obj.get("source_character"),
+            "treatments_required": obj.get("treatments_required"),
+            "treatments_applied": obj.get("treatments_applied") if obj.get("treatments_applied") is not None else 0
         })
         return _obj
 

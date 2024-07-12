@@ -17,10 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from .action_type_enum import ActionTypeEnum
+from .threat_state import ThreatState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,18 +31,20 @@ class Action(BaseModel):
     """ # noqa: E501
     action_id: StrictStr = Field(description="A unique action ID within the scenario")
     action_type: ActionTypeEnum
+    intent_action: Optional[StrictBool] = Field(default=False, description="Whether this action is to be taken or intended")
     unstructured: Optional[StrictStr] = Field(default=None, description="Natural language, plain text description of the action")
     character_id: Optional[StrictStr] = Field(default=None, description="The ID of the character being acted upon")
+    threat_state: Optional[ThreatState] = None
     parameters: Optional[Dict[str, StrictStr]] = Field(default=None, description="key-value pairs containing additional [action-specific parameters](https://github.com/NextCenturyCorporation/itm-evaluation-client?tab=readme-ov-file#available-actions)")
     justification: Optional[StrictStr] = Field(default=None, description="A justification of the action taken")
     kdma_association: Optional[Dict[str, Union[Annotated[float, Field(le=1.0, strict=True, ge=0.0)], Annotated[int, Field(le=1, strict=True, ge=0)]]]] = Field(default=None, description="KDMA associations for this choice, if provided by TA1")
-    __properties: ClassVar[List[str]] = ["action_id", "action_type", "unstructured", "character_id", "parameters", "justification", "kdma_association"]
+    __properties: ClassVar[List[str]] = ["action_id", "action_type", "intent_action", "unstructured", "character_id", "threat_state", "parameters", "justification", "kdma_association"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -76,6 +79,9 @@ class Action(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of threat_state
+        if self.threat_state:
+            _dict['threat_state'] = self.threat_state.to_dict()
         return _dict
 
     @classmethod
@@ -90,8 +96,10 @@ class Action(BaseModel):
         _obj = cls.model_validate({
             "action_id": obj.get("action_id"),
             "action_type": obj.get("action_type"),
+            "intent_action": obj.get("intent_action") if obj.get("intent_action") is not None else False,
             "unstructured": obj.get("unstructured"),
             "character_id": obj.get("character_id"),
+            "threat_state": ThreatState.from_dict(obj["threat_state"]) if obj.get("threat_state") is not None else None,
             "parameters": obj.get("parameters"),
             "justification": obj.get("justification"),
             "kdma_association": obj.get("kdma_association")

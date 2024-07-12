@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class InjuryStatusEnum(str, Enum):
     """
-    Whether the injury is known prior- and post-assessment, and whether it's been treated
+    Whether the injury is known prior- and post-assessment, and to what extent it's been treated
     """
 
     """
@@ -30,6 +30,7 @@ class InjuryStatusEnum(str, Enum):
     DISCOVERABLE = 'discoverable'
     VISIBLE = 'visible'
     DISCOVERED = 'discovered'
+    PARTIALLY_TREATED = 'partially treated'
     TREATED = 'treated'
 
     @classmethod

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictBool
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from .probe_responses import ProbeResponses
@@ -34,11 +34,11 @@ class Tagging(BaseModel):
     reference: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Re-use the tagging configuration from the specified scene index")
     __properties: ClassVar[List[str]] = ["enabled", "repeatable", "probe_responses", "reference"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:

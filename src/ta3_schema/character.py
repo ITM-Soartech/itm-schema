@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from .character_tag_enum import CharacterTagEnum
 from .demographics import Demographics
@@ -37,6 +37,8 @@ class Character(BaseModel):
     name: StrictStr = Field(description="display name, as in a dashboard")
     unstructured: StrictStr = Field(description="Natural language, plain text description of the character")
     unstructured_postassess: Optional[StrictStr] = Field(default=None, description="unstructured description updated after character assessment")
+    has_blanket: Optional[StrictBool] = Field(default=False, description="whether or not this character has a blanket (either wrapped around or underneath)")
+    unseen: Optional[StrictBool] = Field(default=False, description="whether or not this character is visible in the scene or merely heard or reported about from a nearby location")
     intent: Optional[IntentEnum] = None
     directness_of_causality: Optional[DirectnessEnum] = None
     rapport: Optional[RapportEnum] = None
@@ -45,13 +47,13 @@ class Character(BaseModel):
     vitals: Optional[Vitals] = None
     visited: Optional[StrictBool] = Field(default=False, description="whether or not this character has been visited by the ADM in the current scenario")
     tag: Optional[CharacterTagEnum] = None
-    __properties: ClassVar[List[str]] = ["id", "name", "unstructured", "unstructured_postassess", "intent", "directness_of_causality", "rapport", "demographics", "injuries", "vitals", "visited", "tag"]
+    __properties: ClassVar[List[str]] = ["id", "name", "unstructured", "unstructured_postassess", "has_blanket", "unseen", "intent", "directness_of_causality", "rapport", "demographics", "injuries", "vitals", "visited", "tag"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -115,6 +117,8 @@ class Character(BaseModel):
             "name": obj.get("name"),
             "unstructured": obj.get("unstructured"),
             "unstructured_postassess": obj.get("unstructured_postassess"),
+            "has_blanket": obj.get("has_blanket") if obj.get("has_blanket") is not None else False,
+            "unseen": obj.get("unseen") if obj.get("unseen") is not None else False,
             "intent": obj.get("intent"),
             "directness_of_causality": obj.get("directness_of_causality"),
             "rapport": obj.get("rapport"),

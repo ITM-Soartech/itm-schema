@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from .civilian_presence_enum import CivilianPresenceEnum
 from .communication_capability_enum import CommunicationCapabilityEnum
@@ -40,11 +40,11 @@ class Mission(BaseModel):
     medical_policies: Optional[StrictStr] = Field(default=None, description="Medical policies in effect in a mission, to inform decision-making")
     __properties: ClassVar[List[str]] = ["unstructured", "mission_type", "character_importance", "civilian_presence", "communication_capability", "roe", "political_climate", "medical_policies"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:

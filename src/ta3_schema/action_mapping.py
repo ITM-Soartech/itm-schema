@@ -17,12 +17,13 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from .action_type_enum import ActionTypeEnum
 from .conditions import Conditions
 from .semantic_type_enum import SemanticTypeEnum
+from .threat_state import ThreatState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -35,20 +36,22 @@ class ActionMapping(BaseModel):
     unstructured: StrictStr = Field(description="Natural language, plain text description of the action")
     repeatable: Optional[StrictBool] = Field(default=False, description="Whether or not this action should remain after it's selected by an ADM")
     character_id: Optional[StrictStr] = Field(default=None, description="The ID of the character being acted upon")
+    intent_action: Optional[StrictBool] = Field(default=False, description="Whether this mapping is to take an action or to intend one")
+    threat_state: Optional[ThreatState] = None
     parameters: Optional[Dict[str, StrictStr]] = Field(default=None, description="key-value pairs containing additional [action-specific parameters](https://github.com/NextCenturyCorporation/itm-evaluation-client?tab=readme-ov-file#available-actions)")
     probe_id: StrictStr = Field(description="A valid probe_id from the appropriate TA1")
     choice: StrictStr = Field(description="A valid choice for the specified probe_id")
-    next_scene: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The next scene in the scenario, by index")
+    next_scene: Optional[StrictStr] = Field(default=None, description="The ID of the next scene in the scenario; overrides Scene.next_scene")
     kdma_association: Optional[Dict[str, Union[Annotated[float, Field(le=1.0, strict=True, ge=0.0)], Annotated[int, Field(le=1, strict=True, ge=0)]]]] = Field(default=None, description="KDMA associations for this choice, if provided by TA1")
     condition_semantics: Optional[SemanticTypeEnum] = None
     conditions: Optional[Conditions] = None
-    __properties: ClassVar[List[str]] = ["action_id", "action_type", "unstructured", "repeatable", "character_id", "parameters", "probe_id", "choice", "next_scene", "kdma_association", "condition_semantics", "conditions"]
+    __properties: ClassVar[List[str]] = ["action_id", "action_type", "unstructured", "repeatable", "character_id", "intent_action", "threat_state", "parameters", "probe_id", "choice", "next_scene", "kdma_association", "condition_semantics", "conditions"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -83,6 +86,9 @@ class ActionMapping(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of threat_state
+        if self.threat_state:
+            _dict['threat_state'] = self.threat_state.to_dict()
         # override the default output from pydantic by calling `to_dict()` of conditions
         if self.conditions:
             _dict['conditions'] = self.conditions.to_dict()
@@ -103,6 +109,8 @@ class ActionMapping(BaseModel):
             "unstructured": obj.get("unstructured"),
             "repeatable": obj.get("repeatable") if obj.get("repeatable") is not None else False,
             "character_id": obj.get("character_id"),
+            "intent_action": obj.get("intent_action") if obj.get("intent_action") is not None else False,
+            "threat_state": ThreatState.from_dict(obj["threat_state"]) if obj.get("threat_state") is not None else None,
             "parameters": obj.get("parameters"),
             "probe_id": obj.get("probe_id"),
             "choice": obj.get("choice"),

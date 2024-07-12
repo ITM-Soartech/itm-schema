@@ -17,10 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictBool
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from typing_extensions import Annotated
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
+from typing import Any, ClassVar, Dict, List, Optional
 from .avpu_level_enum import AvpuLevelEnum
+from .blood_oxygen_enum import BloodOxygenEnum
 from .breathing_level_enum import BreathingLevelEnum
 from .heart_rate_enum import HeartRateEnum
 from .mental_status_enum import MentalStatusEnum
@@ -31,20 +31,19 @@ class Vitals(BaseModel):
     """
     Vital levels and other indications of health
     """ # noqa: E501
-    conscious: Optional[StrictBool] = Field(default=None, description="whether or not the character appears to be conscious")
     avpu: Optional[AvpuLevelEnum] = None
     ambulatory: Optional[StrictBool] = Field(default=None, description="whether or not the character can walk")
     mental_status: Optional[MentalStatusEnum] = None
     breathing: Optional[BreathingLevelEnum] = None
     heart_rate: Optional[HeartRateEnum] = None
-    spo2: Optional[Union[Annotated[float, Field(le=100.0, strict=True, ge=0.0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="blood oxygen level (percentage)", alias="spo2")
-    __properties: ClassVar[List[str]] = ["conscious", "avpu", "ambulatory", "mental_status", "breathing", "heart_rate", "spo2"]
+    spo2: Optional[BloodOxygenEnum] = None
+    __properties: ClassVar[List[str]] = ["avpu", "ambulatory", "mental_status", "breathing", "heart_rate", "spo2"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -91,7 +90,6 @@ class Vitals(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "conscious": obj.get("conscious"),
             "avpu": obj.get("avpu"),
             "ambulatory": obj.get("ambulatory"),
             "mental_status": obj.get("mental_status"),

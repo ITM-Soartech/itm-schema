@@ -17,9 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictBool
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
 from .action_mapping import ActionMapping
 from .action_type_enum import ActionTypeEnum
 from .conditions import Conditions
@@ -34,22 +33,25 @@ class Scene(BaseModel):
     """
     the specification for a scene in the scenario
     """ # noqa: E501
-    index: Annotated[int, Field(strict=True, ge=0)] = Field(description="The order the scene appears in the scenario")
+    id: StrictStr = Field(description="The scene ID, unique throughout the scenario")
     state: Optional[State] = None
+    next_scene: Optional[StrictStr] = Field(default=None, description="The ID of the default next scene in the scenario; if empty or missing, then by default this is the last scene.")
     end_scene_allowed: StrictBool = Field(description="Whether ADMs can explicitly end the scene")
+    persist_characters: Optional[StrictBool] = Field(default=None, description="Whether characters should persist from the previous scene")
+    removed_characters: Optional[List[StrictStr]] = Field(default=None, description="List of character ids to be removed from the scene")
     probe_config: Optional[List[ProbeConfig]] = Field(default=None, description="TA1-provided probe configuration, ignored by TA3")
     tagging: Optional[Tagging] = None
     action_mapping: List[ActionMapping] = Field(description="List of actions with details of how those actions map to probe responses")
     restricted_actions: Optional[List[ActionTypeEnum]] = Field(default=None, description="List of actions that will be excluded from get_available_actions")
     transition_semantics: Optional[SemanticTypeEnum] = None
     transitions: Optional[Conditions] = None
-    __properties: ClassVar[List[str]] = ["index", "state", "end_scene_allowed", "probe_config", "tagging", "action_mapping", "restricted_actions", "transition_semantics", "transitions"]
+    __properties: ClassVar[List[str]] = ["id", "state", "next_scene", "end_scene_allowed", "persist_characters", "removed_characters", "probe_config", "tagging", "action_mapping", "restricted_actions", "transition_semantics", "transitions"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -119,9 +121,12 @@ class Scene(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "index": obj.get("index"),
+            "id": obj.get("id"),
             "state": State.from_dict(obj["state"]) if obj.get("state") is not None else None,
+            "next_scene": obj.get("next_scene"),
             "end_scene_allowed": obj.get("end_scene_allowed"),
+            "persist_characters": obj.get("persist_characters"),
+            "removed_characters": obj.get("removed_characters"),
             "probe_config": [ProbeConfig.from_dict(_item) for _item in obj["probe_config"]] if obj.get("probe_config") is not None else None,
             "tagging": Tagging.from_dict(obj["tagging"]) if obj.get("tagging") is not None else None,
             "action_mapping": [ActionMapping.from_dict(_item) for _item in obj["action_mapping"]] if obj.get("action_mapping") is not None else None,

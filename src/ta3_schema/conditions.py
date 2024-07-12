@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from .conditions_character_vitals_inner import ConditionsCharacterVitalsInner
@@ -31,18 +31,18 @@ class Conditions(BaseModel):
     """ # noqa: E501
     elapsed_time_lt: Optional[Annotated[int, Field(strict=True, ge=5)]] = Field(default=None, description="True if the scenario elapsed time (in seconds) is less than the specified value")
     elapsed_time_gt: Optional[Annotated[int, Field(strict=True, ge=5)]] = Field(default=None, description="True if the scenario elapsed time (in seconds) is greater than the specified value")
-    actions: Optional[List[List[StrictStr]]] = Field(default=None, description="True if the any of the specified lists of actions have been taken; multiple action ID lists have \"or\" semantics; multiple action IDs within a list have \"and\" semantics")
+    actions: Optional[List[List[StrictStr]]] = Field(default=None, description="True if any of the specified lists of actions have been taken; multiple action ID lists have \"or\" semantics; multiple action IDs within a list have \"and\" semantics")
     probes: Optional[List[StrictStr]] = Field(default=None, description="True if the specified list of probe_ids have been answered")
     probe_responses: Optional[List[StrictStr]] = Field(default=None, description="True if the specified list of probe responses (choice) have been sent")
-    character_vitals: Optional[List[ConditionsCharacterVitalsInner]] = Field(default=None, description="True if the specified list of vitals values have been met for the specified character_id")
-    supplies: Optional[List[Supplies]] = Field(default=None, description="True if there are at least the specified quantity of the specified supply types remaining")
+    character_vitals: Optional[List[ConditionsCharacterVitalsInner]] = Field(default=None, description="True if any of the specified collection of vital values have been met for the specified character_id")
+    supplies: Optional[List[Supplies]] = Field(default=None, description="True if any of the specified supplies reach or go below the specified quantity")
     __properties: ClassVar[List[str]] = ["elapsed_time_lt", "elapsed_time_gt", "actions", "probes", "probe_responses", "character_vitals", "supplies"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:

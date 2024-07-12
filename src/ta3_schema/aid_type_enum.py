@@ -20,16 +20,18 @@ from typing_extensions import Self
 
 class AidTypeEnum(str, Enum):
     """
-    Means of evacuation
+    Types of aid
     """
 
     """
     allowed enum values
     """
-    AIR = 'air'
-    GROUND = 'ground'
-    WATER = 'water'
-    UNKNOWN = 'unknown'
+    LOCAL_MILITARY = 'local military'
+    LOCAL_NON_MINUS_MILITARY = 'local non-military'
+    AIR_EVAC = 'air evac'
+    GROUND_EVAC = 'ground evac'
+    WATER_EVAC = 'water evac'
+    UNKNOWN_EVAC = 'unknown evac'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

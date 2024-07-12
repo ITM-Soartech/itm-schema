@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
 from typing_extensions import Annotated
 from .alignment_source import AlignmentSource
@@ -35,11 +35,11 @@ class AlignmentResults(BaseModel):
     kdma_values: List[KDMAValue] = Field(description="Computed KDMA profile from results")
     __properties: ClassVar[List[str]] = ["alignment_source", "alignment_target_id", "score", "kdma_values"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:

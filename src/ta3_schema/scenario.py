@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from .scene import Scene
 from .state import State
@@ -30,16 +30,17 @@ class Scenario(BaseModel):
     """ # noqa: E501
     id: StrictStr = Field(description="a globally unique id for the scenario")
     name: StrictStr = Field(description="human-readable scenario name, not necessarily unique")
+    first_scene: Optional[StrictStr] = Field(default=None, description="indicates the first/opening scene ID in the scenario")
     session_complete: Optional[StrictBool] = Field(default=None, description="set to true if the session is complete; that is, there are no more scenarios")
     state: State
     scenes: Optional[List[Scene]] = Field(default=None, description="A list of specification for all scenes in the scenario")
-    __properties: ClassVar[List[str]] = ["id", "name", "session_complete", "state", "scenes"]
+    __properties: ClassVar[List[str]] = ["id", "name", "first_scene", "session_complete", "state", "scenes"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -98,6 +99,7 @@ class Scenario(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
+            "first_scene": obj.get("first_scene"),
             "session_complete": obj.get("session_complete"),
             "state": State.from_dict(obj["state"]) if obj.get("state") is not None else None,
             "scenes": [Scene.from_dict(_item) for _item in obj["scenes"]] if obj.get("scenes") is not None else None

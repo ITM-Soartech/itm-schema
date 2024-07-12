@@ -17,7 +17,7 @@
 from .action import Action
 from .action_mapping import ActionMapping
 from .action_type_enum import ActionTypeEnum
-from .aid_delay import AidDelay
+from .aid import Aid
 from .aid_type_enum import AidTypeEnum
 from .air_quality_enum import AirQualityEnum
 from .alignment_results import AlignmentResults
@@ -25,6 +25,7 @@ from .alignment_source import AlignmentSource
 from .alignment_target import AlignmentTarget
 from .ambient_noise_enum import AmbientNoiseEnum
 from .avpu_level_enum import AvpuLevelEnum
+from .blood_oxygen_enum import BloodOxygenEnum
 from .breathing_level_enum import BreathingLevelEnum
 from .character import Character
 from .character_role_enum import CharacterRoleEnum
@@ -37,7 +38,10 @@ from .decision_environment import DecisionEnvironment
 from .demographic_sex_enum import DemographicSexEnum
 from .demographics import Demographics
 from .directness_enum import DirectnessEnum
+from .entity_type_enum import EntityTypeEnum
 from .environment import Environment
+from .event import Event
+from .event_type_enum import EventTypeEnum
 from .fauna_type_enum import FaunaTypeEnum
 from .flora_type_enum import FloraTypeEnum
 from .heart_rate_enum import HeartRateEnum
@@ -51,6 +55,8 @@ from .intent_enum import IntentEnum
 from .kdma_value import KDMAValue
 from .lighting_type_enum import LightingTypeEnum
 from .mental_status_enum import MentalStatusEnum
+from .message_type_enum import MessageTypeEnum
+from .meta_info import MetaInfo
 from .military_branch_enum import MilitaryBranchEnum
 from .military_disposition_enum import MilitaryDispositionEnum
 from .military_rank_enum import MilitaryRankEnum
@@ -63,6 +69,7 @@ from .oxygen_levels_enum import OxygenLevelsEnum
 from .peak_noise_enum import PeakNoiseEnum
 from .population_density_enum import PopulationDensityEnum
 from .probe_config import ProbeConfig
+from .probe_response import ProbeResponse
 from .probe_responses import ProbeResponses
 from .race_enum import RaceEnum
 from .rapport_enum import RapportEnum

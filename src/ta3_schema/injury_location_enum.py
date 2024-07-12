@@ -28,6 +28,10 @@ class InjuryLocationEnum(str, Enum):
     """
     RIGHT_FOREARM = 'right forearm'
     LEFT_FOREARM = 'left forearm'
+    RIGHT_HAND = 'right hand'
+    LEFT_HAND = 'left hand'
+    RIGHT_LEG = 'right leg'
+    LEFT_LEG = 'left leg'
     RIGHT_CALF = 'right calf'
     LEFT_CALF = 'left calf'
     RIGHT_THIGH = 'right thigh'
@@ -42,6 +46,7 @@ class InjuryLocationEnum(str, Enum):
     LEFT_SIDE = 'left side'
     RIGHT_CHEST = 'right chest'
     LEFT_CHEST = 'left chest'
+    CENTER_CHEST = 'center chest'
     RIGHT_WRIST = 'right wrist'
     LEFT_WRIST = 'left wrist'
     LEFT_FACE = 'left face'
@@ -49,6 +54,9 @@ class InjuryLocationEnum(str, Enum):
     LEFT_NECK = 'left neck'
     RIGHT_NECK = 'right neck'
     INTERNAL = 'internal'
+    HEAD = 'head'
+    NECK = 'neck'
+    STOMACH = 'stomach'
     UNSPECIFIED = 'unspecified'
 
     @classmethod

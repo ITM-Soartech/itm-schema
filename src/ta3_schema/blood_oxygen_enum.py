@@ -18,30 +18,21 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class InjuryTypeEnum(str, Enum):
+class BloodOxygenEnum(str, Enum):
     """
-    A brief but descriptive label for the injury type
+    A description of the percentage of oxygen in someone's blood, as measured by a pulse oximeter
     """
 
     """
     allowed enum values
     """
-    EAR_BLEED = 'Ear Bleed'
-    ASTHMATIC = 'Asthmatic'
-    LACERATION = 'Laceration'
-    PUNCTURE = 'Puncture'
-    SHRAPNEL = 'Shrapnel'
-    CHEST_COLLAPSE = 'Chest Collapse'
-    AMPUTATION = 'Amputation'
-    BURN = 'Burn'
-    BROKEN_BONE = 'Broken Bone'
-    INTERNAL = 'Internal'
-    TRAUMATIC_BRAIN_INJURY = 'Traumatic Brain Injury'
-    OPEN_ABDOMINAL_WOUND = 'Open Abdominal Wound'
+    NORMAL = 'NORMAL'
+    LOW = 'LOW'
+    NONE = 'NONE'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of InjuryTypeEnum from a JSON string"""
+        """Create an instance of BloodOxygenEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

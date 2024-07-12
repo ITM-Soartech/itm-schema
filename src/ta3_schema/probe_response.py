@@ -18,18 +18,19 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
-from .vitals import Vitals
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ConditionsCharacterVitalsInner(BaseModel):
+class ProbeResponse(BaseModel):
     """
-    True if all vitals values have been met by the specified character_id
+    encapsulates the selection by a DM of an option in response to a probe
     """ # noqa: E501
-    character_id: StrictStr = Field(description="The ID of the character in question")
-    vitals: Vitals
-    __properties: ClassVar[List[str]] = ["character_id", "vitals"]
+    scenario_id: StrictStr = Field(description="globally unique scenario ID")
+    probe_id: StrictStr = Field(description="globally unique probe ID")
+    choice: StrictStr = Field(description="id of choice made")
+    justification: Optional[StrictStr] = Field(default=None, description="A justification of the response to the probe")
+    __properties: ClassVar[List[str]] = ["scenario_id", "probe_id", "choice", "justification"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +50,7 @@ class ConditionsCharacterVitalsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ConditionsCharacterVitalsInner from a JSON string"""
+        """Create an instance of ProbeResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,14 +71,11 @@ class ConditionsCharacterVitalsInner(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of vitals
-        if self.vitals:
-            _dict['vitals'] = self.vitals.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ConditionsCharacterVitalsInner from a dict"""
+        """Create an instance of ProbeResponse from a dict"""
         if obj is None:
             return None
 
@@ -85,8 +83,10 @@ class ConditionsCharacterVitalsInner(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "character_id": obj.get("character_id"),
-            "vitals": Vitals.from_dict(obj["vitals"]) if obj.get("vitals") is not None else None
+            "scenario_id": obj.get("scenario_id"),
+            "probe_id": obj.get("probe_id"),
+            "choice": obj.get("choice"),
+            "justification": obj.get("justification")
         })
         return _obj
 

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from .character_role_enum import CharacterRoleEnum
@@ -48,11 +48,11 @@ class Demographics(BaseModel):
     mission_importance: Optional[MissionImportanceEnum] = None
     __properties: ClassVar[List[str]] = ["age", "sex", "race", "military_disposition", "military_branch", "rank", "rank_title", "skills", "role", "mission_importance"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:

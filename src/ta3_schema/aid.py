@@ -17,28 +17,31 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from .aid_type_enum import AidTypeEnum
+from .military_disposition_enum import MilitaryDispositionEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AidDelay(BaseModel):
+class Aid(BaseModel):
     """
-    Properties related to CASEVAC or MEDEVAC
+    Properties related to evacuation, available hospitals, or other forms of aid
     """ # noqa: E501
-    id: StrictStr = Field(description="An identifier for the evacuation opportunity, unique within the scene")
-    delay: Union[Annotated[float, Field(strict=True, ge=1.0)], Annotated[int, Field(strict=True, ge=1)]] = Field(description="CASEVAC or MEDEVAC timer, in minutes")
+    id: StrictStr = Field(description="An identifier for the aid opportunity, unique within the scene")
+    delay: Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]] = Field(description="Time until aid is available, in minutes; 0 means ready now")
     type: Optional[AidTypeEnum] = None
-    max_transport: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Maximum number of casualties that can be transported")
-    __properties: ClassVar[List[str]] = ["id", "delay", "type", "max_transport"]
+    role: Optional[Annotated[int, Field(le=4, strict=True, ge=1)]] = Field(default=None, description="The characterization of health support for the distribution of medical resources and capabilities; Role 1 has higher capability than Role 4. See [health.mil](https://health.mil/Reference-Center/Glossary-Terms/2018/06/22/Roles-of-Medical-Care) ")
+    patients_treated: Optional[List[MilitaryDispositionEnum]] = Field(default=None, description="A list of types of patients that can be helped; if omitted, then no restrictions or restrictions are irrelevant")
+    max_transport: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Maximum number of casualties that can be accommodated")
+    __properties: ClassVar[List[str]] = ["id", "delay", "type", "role", "patients_treated", "max_transport"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -52,7 +55,7 @@ class AidDelay(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AidDelay from a JSON string"""
+        """Create an instance of Aid from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,7 +80,7 @@ class AidDelay(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AidDelay from a dict"""
+        """Create an instance of Aid from a dict"""
         if obj is None:
             return None
 
@@ -88,6 +91,8 @@ class AidDelay(BaseModel):
             "id": obj.get("id"),
             "delay": obj.get("delay"),
             "type": obj.get("type"),
+            "role": obj.get("role"),
+            "patients_treated": obj.get("patients_treated"),
             "max_transport": obj.get("max_transport")
         })
         return _obj

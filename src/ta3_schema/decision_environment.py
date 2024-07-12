@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from .aid_delay import AidDelay
+from .aid import Aid
 from .air_quality_enum import AirQualityEnum
 from .injury_trigger_enum import InjuryTriggerEnum
 from .movement_restriction_enum import MovementRestrictionEnum
@@ -34,7 +34,7 @@ class DecisionEnvironment(BaseModel):
     Environmental elements that impact decision-making
     """ # noqa: E501
     unstructured: StrictStr = Field(description="Natural language, plain text description of decision-impacting environmental factors")
-    aid_delay: Optional[List[AidDelay]] = Field(default=None, description="A list of evacuation opportunities")
+    aid: Optional[List[Aid]] = Field(default=None, description="A list of available forms of aid")
     movement_restriction: Optional[MovementRestrictionEnum] = None
     sound_restriction: Optional[SoundRestrictionEnum] = None
     oxygen_levels: Optional[OxygenLevelsEnum] = None
@@ -42,13 +42,13 @@ class DecisionEnvironment(BaseModel):
     injury_triggers: Optional[InjuryTriggerEnum] = None
     air_quality: Optional[AirQualityEnum] = None
     city_infrastructure: Optional[StrictStr] = Field(default=None, description="Refers to building/city infrastructure that should be noted and known (safe house, etc.)")
-    __properties: ClassVar[List[str]] = ["unstructured", "aid_delay", "movement_restriction", "sound_restriction", "oxygen_levels", "population_density", "injury_triggers", "air_quality", "city_infrastructure"]
+    __properties: ClassVar[List[str]] = ["unstructured", "aid", "movement_restriction", "sound_restriction", "oxygen_levels", "population_density", "injury_triggers", "air_quality", "city_infrastructure"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -83,13 +83,13 @@ class DecisionEnvironment(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in aid_delay (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in aid (list)
         _items = []
-        if self.aid_delay:
-            for _item in self.aid_delay:
+        if self.aid:
+            for _item in self.aid:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['aid_delay'] = _items
+            _dict['aid'] = _items
         return _dict
 
     @classmethod
@@ -103,7 +103,7 @@ class DecisionEnvironment(BaseModel):
 
         _obj = cls.model_validate({
             "unstructured": obj.get("unstructured"),
-            "aid_delay": [AidDelay.from_dict(_item) for _item in obj["aid_delay"]] if obj.get("aid_delay") is not None else None,
+            "aid": [Aid.from_dict(_item) for _item in obj["aid"]] if obj.get("aid") is not None else None,
             "movement_restriction": obj.get("movement_restriction"),
             "sound_restriction": obj.get("sound_restriction"),
             "oxygen_levels": obj.get("oxygen_levels"),

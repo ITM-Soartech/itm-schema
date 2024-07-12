@@ -17,10 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from .character import Character
 from .environment import Environment
+from .event import Event
+from .meta_info import MetaInfo
 from .mission import Mission
 from .supplies import Supplies
 from .threat_state import ThreatState
@@ -32,20 +34,22 @@ class State(BaseModel):
     the current tactical & environmental state of the scenario and of its characters
     """ # noqa: E501
     unstructured: StrictStr = Field(description="Natural language, plain text description of a scene's state")
-    elapsed_time: Optional[StrictInt] = Field(default=None, description="the simulated elapsed time (in seconds) since the scenario started")
+    elapsed_time: Optional[StrictInt] = Field(default=None, description="The simulated elapsed time (in seconds) since the scenario started")
+    meta_info: Optional[MetaInfo] = None
     scenario_complete: Optional[StrictBool] = Field(default=None, description="set to true if the scenario is complete; subsequent calls involving that scenario will return an error code")
     mission: Optional[Mission] = None
     environment: Environment
     threat_state: Optional[ThreatState] = None
+    events: Optional[List[Event]] = Field(default=None, description="A list of scenario events to inform decision-making")
     supplies: List[Supplies] = Field(description="A list of supplies available to the medic")
     characters: List[Character] = Field(description="A list of characters in the scene, including injured patients, civilians, medics, etc.")
-    __properties: ClassVar[List[str]] = ["unstructured", "elapsed_time", "scenario_complete", "mission", "environment", "threat_state", "supplies", "characters"]
+    __properties: ClassVar[List[str]] = ["unstructured", "elapsed_time", "meta_info", "scenario_complete", "mission", "environment", "threat_state", "events", "supplies", "characters"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -80,6 +84,9 @@ class State(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of meta_info
+        if self.meta_info:
+            _dict['meta_info'] = self.meta_info.to_dict()
         # override the default output from pydantic by calling `to_dict()` of mission
         if self.mission:
             _dict['mission'] = self.mission.to_dict()
@@ -89,6 +96,13 @@ class State(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of threat_state
         if self.threat_state:
             _dict['threat_state'] = self.threat_state.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in events (list)
+        _items = []
+        if self.events:
+            for _item in self.events:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['events'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in supplies (list)
         _items = []
         if self.supplies:
@@ -117,10 +131,12 @@ class State(BaseModel):
         _obj = cls.model_validate({
             "unstructured": obj.get("unstructured"),
             "elapsed_time": obj.get("elapsed_time"),
+            "meta_info": MetaInfo.from_dict(obj["meta_info"]) if obj.get("meta_info") is not None else None,
             "scenario_complete": obj.get("scenario_complete"),
             "mission": Mission.from_dict(obj["mission"]) if obj.get("mission") is not None else None,
             "environment": Environment.from_dict(obj["environment"]) if obj.get("environment") is not None else None,
             "threat_state": ThreatState.from_dict(obj["threat_state"]) if obj.get("threat_state") is not None else None,
+            "events": [Event.from_dict(_item) for _item in obj["events"]] if obj.get("events") is not None else None,
             "supplies": [Supplies.from_dict(_item) for _item in obj["supplies"]] if obj.get("supplies") is not None else None,
             "characters": [Character.from_dict(_item) for _item in obj["characters"]] if obj.get("characters") is not None else None
         })
