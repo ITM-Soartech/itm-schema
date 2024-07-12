@@ -29,7 +29,7 @@ class Supplies(BaseModel):
     """
     a single type of medical supply available to the medic
     """ # noqa: E501
-    type: SupplyTypeEnum
+    type: str
     reusable: Optional[StrictBool] = Field(default=False, description="Whether or not item is consumable/reusable")
     quantity: Annotated[int, Field(le=999, strict=True, ge=0)] = Field(description="Number of items available in the medical bag")
     __properties: ClassVar[List[str]] = ["type", "reusable", "quantity"]

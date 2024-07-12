@@ -32,8 +32,8 @@ class Injury(BaseModel):
     """
     An injury on a character.
     """ # noqa: E501
-    name: InjuryTypeEnum
-    location: InjuryLocationEnum
+    name: str
+    location: str
     severity: Optional[InjurySeverityEnum] = None
     status: InjuryStatusEnum
     source_character: Optional[StrictStr] = Field(default=None, description="The character id of the person responsible for the injury, subject to the character's `directness_of_causality`")
