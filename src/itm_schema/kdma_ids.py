@@ -20,4 +20,3 @@ class KDMAId(str, Enum):
     pquant = "PerceivedQuantityOfLivesSaved"
     trait_bias = "TraitBias"
     frugality = "Frugality"
-    
