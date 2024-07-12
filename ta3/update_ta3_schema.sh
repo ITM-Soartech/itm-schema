@@ -34,3 +34,6 @@ mv ${models_dir} ${outdir}
 
 # remove temporary directory and schema yaml file
 rm -rf ${tmpdir} ${infile}
+
+cd "${outdir}"
+find ./ -type f -exec sed -i -e 's/from pydantic import BaseModel,/from itm_schema.base_model import UnValidatedBaseModel as BaseModel\nfrom pydantic import/g' {} \;

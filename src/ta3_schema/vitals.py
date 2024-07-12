@@ -17,7 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool
+from itm_schema.base_model import UnValidatedBaseModel as BaseModel
+from pydantic import ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
 from .avpu_level_enum import AvpuLevelEnum
 from .blood_oxygen_enum import BloodOxygenEnum

@@ -17,7 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from itm_schema.base_model import UnValidatedBaseModel as BaseModel
+from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from .decision_environment import DecisionEnvironment
 from .sim_environment import SimEnvironment

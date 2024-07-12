@@ -17,7 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from itm_schema.base_model import UnValidatedBaseModel as BaseModel
+from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List
 from .threat_severity_enum import ThreatSeverityEnum
 from .threat_type_enum import ThreatTypeEnum

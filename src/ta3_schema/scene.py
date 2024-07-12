@@ -17,7 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from itm_schema.base_model import UnValidatedBaseModel as BaseModel
+from pydantic import ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from .action_mapping import ActionMapping
 from .action_type_enum import ActionTypeEnum
