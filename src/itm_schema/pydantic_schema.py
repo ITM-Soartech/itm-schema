@@ -207,6 +207,14 @@ class AlignmentDistribution(ValidatedBaseModel):
     # List of cumulative density scores
     cumulative_density: list[float]
 
+class AlignmentMatchup(ValidatedBaseModel):
+    """
+    An object with IDs for the most and least aligned targets relative to a session
+    """
+    session_id: str = Field(description="The session ID used for comparison")
+    most_aligned: str = Field(description="The alignment target with the highest alignment to the given session")
+    least_aligned: str = Field(description="The alignment target with the lowest alignment to the given session")
+
 
 if __name__ == "__main__":
     pass
