@@ -33,10 +33,21 @@ class KDMA(ValidatedBaseModel):
     kdma: KDMAId = Field(description="Name of KDMA.")
     value: Optional[float] = Field(
         description="Numeric score for a given KDMA, 0-1 scale.",
-        ge=0.0, le=1.0
+        ge=0.0, le=1.0,
+        default=None,
     )
     kdes: Optional[dict[str, KDEData]] = Field(
         description="KDE Objects representing a KDMA Measurement",
+        default=None,
+    )
+
+
+class KDMAProfile(ValidatedBaseModel):
+    """
+    Set of KDMA objects
+    """
+    kdma_profile: list[KDMA] = Field(
+        description="KDMA Profile"
     )
 
 
@@ -167,7 +178,6 @@ class AlignmentResults(ValidatedBaseModel):
         desc="Measured alignment, 0 (completely unaligned) - "
              "1 (completely aligned).",
         ge=0, le=1)
-    kdma_values: list[KDMA] = Field(description="Computed KDMA profile from results")
 
 # Probe responses
 class Response(ValidatedBaseModel):
