@@ -10,20 +10,33 @@ class ValidatedBaseModel(BaseModel):
     """
 
     model_config = ConfigDict(
-        
         extra='forbid' # raise error if extra values are passed to model
     )
 
     
+
+class KDEData(ValidatedBaseModel):
+    """
+    
+    """
+    kde: str = Field(
+        description="sklearn.neighbors.KernelDensity serialized to base64 string"
+    )
+    label: str = Field(
+        description= "Label for this KDE",
+    )
 
 class KDMA(ValidatedBaseModel):
     """
     Single KDMA value with values between 0 and 1
     """
     kdma: KDMAId = Field(description="Name of KDMA.")
-    value: float = Field(
+    value: Optional[float] = Field(
         description="Numeric score for a given KDMA, 0-1 scale.",
         ge=0.0, le=1.0
+    )
+    kdes: Optional[dict[str, KDEData]] = Field(
+        description="KDE Objects representing a KDMA Measurement",
     )
 
 
