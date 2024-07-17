@@ -16,9 +16,6 @@ class SimpleHistogram(ps.ValidatedBaseModel):
 
 
 class KDMAMeasurement(ps.ValidatedBaseModel):
-    """
-
-    """
     # an enum that represented which KDMA this measurement corresponds to
     kdma_id: KDMAId
 
@@ -80,7 +77,7 @@ class KDMAProfile(ps.ValidatedBaseModel):
     """
     # using a dict instead of a list allows for slightly better efficiency, even though ID is redundant
     dm_id: str
-    kdma_measurements: Dict[KDMAId, KDMAMeasurement]
+    kdma_measurements: dict[KDMAId, dict[str, KDMAMeasurement]]
 
 
 class AlignmentTarget(ps.ValidatedBaseModel):
