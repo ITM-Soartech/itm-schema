@@ -172,8 +172,6 @@ class AlignmentResults(ValidatedBaseModel):
     Computed KDMA profile and alignment score for a set of decisions.
     """
     alignment_source: list[AlignmentSource]
-    alignment_target_id: str = Field(
-        description="ID of desired profile to align responses to.")
     score: float = Field(
         desc="Measured alignment, 0 (completely unaligned) - "
              "1 (completely aligned).",
