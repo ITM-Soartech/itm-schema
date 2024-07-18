@@ -46,7 +46,7 @@ class KDMAProfile(ValidatedBaseModel):
     """
     Set of KDMA objects
     """
-    kdma_profile: list[KDMA] = Field(
+    computed_kdma_profile: list[KDMA] = Field(
         description="KDMA Profile"
     )
 

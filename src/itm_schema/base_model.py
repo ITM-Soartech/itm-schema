@@ -8,7 +8,6 @@ def invalid_to_none(v: Any, handler: Callable[[Any], Any]) -> Any:
     try:
         return handler(v)
     except pydantic.ValidationError:
-        print(f'!!! Error loading {v}')
         return v #None
 
 
