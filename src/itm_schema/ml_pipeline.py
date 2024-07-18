@@ -75,9 +75,12 @@ class KDMAProfile(ps.ValidatedBaseModel):
     """
 
     """
-    # using a dict instead of a list allows for slightly better efficiency, even though ID is redundant
+
     dm_id: str
-    kdma_measurements: dict[KDMAId, dict[str, KDMAMeasurement]]
+
+    # There should be one KDMAMeasurement per KDMA
+    # The KDMAMeasurement object encapsulates multiple KDEs
+    kdma_measurements: dict[KDMAId, KDMAMeasurement]
 
 
 class AlignmentTarget(ps.ValidatedBaseModel):
