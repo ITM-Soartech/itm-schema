@@ -236,6 +236,12 @@ class AlignmentMatchup(ValidatedBaseModel):
     most_aligned: str = Field(description="The alignment target with the highest alignment to the given session")
     least_aligned: str = Field(description="The alignment target with the lowest alignment to the given session")
 
+class TargetScore(ValidatedBaseModel):
+    """
+    An object with the targetID and alignment score for a target relative to a session, to be put in an ordered list
+    """
+    target: str
+    score: float
 
 if __name__ == "__main__":
     pass
