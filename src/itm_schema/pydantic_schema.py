@@ -40,6 +40,10 @@ class KDMA(ValidatedBaseModel):
         description="KDE Objects representing a KDMA Measurement",
         default=None,
     )
+    scores: Optional[list[float]] = Field(
+        description="Ordered KDMA scores",
+        default=None,
+    )
 
 
 class KDMAProfile(ValidatedBaseModel):
