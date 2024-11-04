@@ -20,18 +20,16 @@ import json
 from itm_schema.base_model import UnValidatedBaseModel as BaseModel
 from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List
-from .skill_level_enum import SkillLevelEnum
-from .skill_type_enum import SkillTypeEnum
+from .kdma_value import KDMAValue
 from typing import Optional, Set
 from typing_extensions import Self
 
-class Skills(BaseModel):
+class KDMAProfile(BaseModel):
     """
-    A skill possessed by a character at a certain level of proficiency
+    KDMA Profile
     """ # noqa: E501
-    skill_type: SkillTypeEnum
-    level: SkillLevelEnum
-    __properties: ClassVar[List[str]] = ["skill_type", "level"]
+    computed_kdma_profile: List[KDMAValue]
+    __properties: ClassVar[List[str]] = ["computed_kdma_profile"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +49,7 @@ class Skills(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of Skills from a JSON string"""
+        """Create an instance of KDMAProfile from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,11 +70,18 @@ class Skills(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in computed_kdma_profile (list)
+        _items = []
+        if self.computed_kdma_profile:
+            for _item_computed_kdma_profile in self.computed_kdma_profile:
+                if _item_computed_kdma_profile:
+                    _items.append(_item_computed_kdma_profile.to_dict())
+            _dict['computed_kdma_profile'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of Skills from a dict"""
+        """Create an instance of KDMAProfile from a dict"""
         if obj is None:
             return None
 
@@ -84,8 +89,7 @@ class Skills(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "skill_type": obj.get("skill_type"),
-            "level": obj.get("level")
+            "computed_kdma_profile": [KDMAValue.from_dict(_item) for _item in obj["computed_kdma_profile"]] if obj.get("computed_kdma_profile") is not None else None
         })
         return _obj
 

@@ -18,20 +18,18 @@ import re  # noqa: F401
 import json
 
 from itm_schema.base_model import UnValidatedBaseModel as BaseModel
-from pydantic import ConfigDict
+from pydantic import ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from .skill_level_enum import SkillLevelEnum
-from .skill_type_enum import SkillTypeEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
-class Skills(BaseModel):
+class KDEData(BaseModel):
     """
-    A skill possessed by a character at a certain level of proficiency
+    KDE Objects representing a KDMA Measurement
     """ # noqa: E501
-    skill_type: SkillTypeEnum
-    level: SkillLevelEnum
-    __properties: ClassVar[List[str]] = ["skill_type", "level"]
+    kde: StrictStr = Field(description="sklearn.neighbors.KernelDensity serialized to base64 string")
+    label: StrictStr = Field(description="Label for this KDE")
+    __properties: ClassVar[List[str]] = ["kde", "label"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +49,7 @@ class Skills(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of Skills from a JSON string"""
+        """Create an instance of KDEData from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,7 +74,7 @@ class Skills(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of Skills from a dict"""
+        """Create an instance of KDEData from a dict"""
         if obj is None:
             return None
 
@@ -84,8 +82,8 @@ class Skills(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "skill_type": obj.get("skill_type"),
-            "level": obj.get("level")
+            "kde": obj.get("kde"),
+            "label": obj.get("label")
         })
         return _obj
 

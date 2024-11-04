@@ -18,23 +18,22 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class DirectnessEnum(str, Enum):
+class MedicalPoliciesEnum(str, Enum):
     """
-    How directly a character is responsible for injury
+    Directives issued by competent military authority
     """
 
     """
     allowed enum values
     """
-    DIRECT = 'direct'
-    SOMEWHAT_DIRECT = 'somewhat direct'
-    SOMEWHAT_INDIRECT = 'somewhat indirect'
-    INDIRECT = 'indirect'
-    NONE = 'none'
+    TREAT_ALL_NEUTRALLY = 'Treat All Neutrally'
+    TREAT_ENEMY_LLE = 'Treat Enemy LLE'
+    TREAT_CIVILIAN_LLE = 'Treat Civilian LLE'
+    PRIORITIZE_MISSION = 'Prioritize Mission'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of DirectnessEnum from a JSON string"""
+        """Create an instance of MedicalPoliciesEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 
